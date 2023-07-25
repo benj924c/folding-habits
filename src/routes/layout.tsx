@@ -2,8 +2,9 @@ import { component$, Slot, useContext, useTask$, useVisibleTask$ } from "@builde
 import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
 import { Header } from "./components/header";
 import { Footer } from "./components/footer";
-import { setSupabaseCookie, supabase } from "~/utils/supabase";
+import { setSupabaseCookie } from "~/utils/supabase";
 import { userDetailsContext } from "~/root";
+import { createServerClient } from "supabase-auth-helpers-qwik";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // Control caching for this request for best performance and to reduce hosting costs:
@@ -16,18 +17,22 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
   });
 };
 
-export const useIsLoggedIn = routeLoader$(async ({ cookie }) => {
-  // const refreshToken = cookie.get('my-refresh-token')
-  const accessToken = cookie.get('my-access-token')
-
-  // if (refreshToken && accessToken) {
-  //   await supabase.auth.setSession({
-  //     refresh_token: refreshToken.value,
-  //     access_token: accessToken.value,
-  // })
-  // }
-  const { data } = await supabase.auth.getUser(accessToken?.value)
-  return data.user != null
+export const useIsLoggedIn = routeLoader$(async (requestEv) => {
+  const { cookie } = requestEv
+  const refreshToken = cookie.get('my-refresh-token')?.value ?? ""
+  const accessToken = cookie.get('my-access-token')?.value ?? ""
+  const supabaseClient = createServerClient(
+    requestEv.env.get("SUPABASE_URL")!,
+    requestEv.env.get("SUPABASE_ANON_KEY")!,
+    requestEv
+  )
+  const { data } = await supabaseClient.auth.getUser(accessToken)
+  await supabaseClient.auth.setSession({
+    refresh_token: refreshToken,
+    access_token: accessToken,
+  })
+  const { data: sessionData } = await supabaseClient.auth.getSession()
+  return { isLoggedIn: data.user != null, session: sessionData.session }
 })
 
 export default component$(() => {
@@ -35,15 +40,8 @@ export default component$(() => {
   const userDetails = useContext(userDetailsContext)
 
   useTask$(() => {
-    userDetails.isLoggedIn = isLoggedIn.value
-  })
-
-  useVisibleTask$(async () => {
-    const { data } = await supabase.auth.getSession()
-    console.log(data)
-    if (isLoggedIn.value && data.session?.user != null)
-      userDetails.isLoggedIn = true
-      userDetails.session = data.session
+    userDetails.isLoggedIn = isLoggedIn.value.isLoggedIn
+    userDetails.session = isLoggedIn.value.session
   })
 
   useVisibleTask$(() => setSupabaseCookie())
@@ -51,7 +49,7 @@ export default component$(() => {
   return (
     <div class="flex flex-col min-h-screen">
       <Header />
-      <main class="grid max-w-7xl m-auto prose mt-4">
+      <main class="grid max-w-7xl prose my-16 grow self-center p-4">
         <Slot />
       </main>
       <Footer />

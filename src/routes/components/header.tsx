@@ -17,19 +17,24 @@ export const Header = component$(() => {
   })
 
   return (
-    <header class="flex justify-between p-8 ">
-      <div>Logo</div>
-      <nav class="flex gap-8">
-        <Link href="/">Home</Link>
-        {userDetails.isLoggedIn && (
-          <Link href="/dashboard">Dashboard</Link>
-        )}
-        {userDetails.isLoggedIn ? (
-          <Link href="/" onClick$={handleLogout}>Logout</Link>
-        ) : (
-          <Link href="/login">Login</Link>
-        )}
-      </nav>
-    </header>
+    <div class="navbar bg-base-100 drop-shadow-md">
+      <header class="flex justify-between container m-auto">
+        <Link class="btn btn-ghost normal-case" href="/" >Logo</Link>
+        <nav class="flex gap-2">
+          <Link class="btn btn-ghost normal-case" href="/">Home</Link>
+          {userDetails.isLoggedIn && (
+            <Link class="btn btn-ghost normal-case" href="/dashboard">Dashboard</Link>
+            )}
+          {userDetails.isLoggedIn ? (
+            <Link class="btn btn-ghost normal-case" href="/" onClick$={handleLogout}>Logout</Link>
+            ) : (
+              <>
+              <Link class="btn btn-ghost normal-case" href="/login">Login</Link>
+              <Link class="btn btn-ghost normal-case" href="/signup">Signup</Link>
+            </>
+          )}
+        </nav>
+      </header>
+    </div>
   )
 })

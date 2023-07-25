@@ -1,5 +1,9 @@
-import { component$, useSignal, $, useContext, useStore } from "@builder.io/qwik"
-import { Link, routeLoader$, useNavigate } from "@builder.io/qwik-city"
+import type { QRL } from "@builder.io/qwik";
+import { component$, $, useContext, useStore } from "@builder.io/qwik"
+import { Link, routeLoader$, useNavigate, z } from "@builder.io/qwik-city"
+import type { SubmitHandler} from "@modular-forms/qwik";
+import { type InitialValues, useForm, zodForm$ } from "@modular-forms/qwik"
+import { Button } from "~/components/Button"
 import { Input } from "~/components/Input"
 import { userDetailsContext } from "~/root"
 import { supabase } from "~/utils/supabase"
@@ -15,31 +19,42 @@ export const useRedirectIfLoggedIn = routeLoader$(async ({ cookie, redirect }) =
   }
 })
 
+export const loginFormSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+})
+
+export type LoginForm = z.infer<typeof loginFormSchema>
+
+export const useLoginFormLoader = routeLoader$<InitialValues<LoginForm>>(() => ({
+  email: "",
+  password: "",
+}))
+
 export default component$(() => {
+  const [loginForm, { Form, Field }] = useForm<LoginForm>({
+    loader: useLoginFormLoader(),
+    validate: zodForm$(loginFormSchema),
+  })
+
   const userDetails = useContext(userDetailsContext)
   const error = useStore({
     isError: false,
     message: "error",
   })
-  const email = useSignal('')
-  const password = useSignal('')
-  const isLoading = useSignal(false)
   const navigate = useNavigate()
 
-  const handleLogin = $(async () => {
-    isLoading.value = true
+  const handleLogin: QRL<SubmitHandler<LoginForm>> = $(async (values) => {
     const { data, error: supabaseError } = await supabase.auth.signInWithPassword({
-      email: email.value,
-      password: password.value,
+      email: values.email,
+      password: values.password,
     })
     if (data.session) {
-      isLoading.value = false
       userDetails.isLoggedIn = true
       userDetails.session = data.session
       navigate('/')
     }
     if (supabaseError) {
-      isLoading.value = false
       error.isError = true
       error.message = supabaseError.message
     }
@@ -48,24 +63,45 @@ export default component$(() => {
   return (
     <>
       {error.isError && (
-          <div class="alert alert-error">
+        <div class="alert alert-error">
           <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           <span>Error! {error.message}</span>
         </div>
       )
       }
       <h1>Login</h1>
-      <form preventdefault:submit onSubmit$={handleLogin} class="grid gap-4">
-        <Input bind={email} type="text" placeholder="Username" />
-        <Input bind={password} type="password" placeholder="Password" />
-        <div>
-          <button type="submit" class="btn btn-primary btn-wide">
-            {isLoading.value ? <span class="loading loading-spinner text-neutral"></span>: "Login"}
-          </button>
+      <div>
+        <Form onSubmit$={handleLogin} class="grid gap-4">
+          <Field name="email">
+            {( field, props) => (
+              <Input
+                placeholder="Email"
+                {...field}
+                {...props}
+              />
+            )}
+          </Field>
+          <Field name="password">
+            {( field, props) => (
+              <Input
+                placeholder="Password"
+                type="password"
+                {...field}
+                {...props}
+              />
+            )}
+          </Field>
+          <Button
+            type="submit"
+            isLoading={loginForm.submitting}
+            class="btn-wide"
+          >
+            Login
+          </Button>
+        </Form>
+        <div class="mt-4 text-center">
+          <Link href="/signup">Don't have an account?</Link>
         </div>
-      </form>
-      <div class="mt-4 text-center">
-        <Link href="/signup">Don't have an account?</Link>
       </div>
     </>
   )

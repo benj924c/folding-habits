@@ -1,5 +1,4 @@
 import { component$ } from "@builder.io/qwik";
-
 export interface InputProps {
   placeholder?: string
   type?:
@@ -26,17 +25,18 @@ export interface InputProps {
     | "url"
     | "week"
 
-  bind?: any
   label?: string
+  props?: any
 }
 
 export const Input = component$<InputProps>((
   {
     type = "text",
     placeholder = "Type here",
-    bind,
     label,
+    ...props
   }) => {
+  // TODO: Add CVA for error handling
   return (
     <div class="form-control">
       {label && (
@@ -44,7 +44,12 @@ export const Input = component$<InputProps>((
           <span class="label-text">{label}</span>
         </label>
       )}
-      <input bind:value={bind} type={type} placeholder={placeholder} class="input input-bordered input-primary w-full max-w-xs" />
+      <input
+        type={type}
+        placeholder={placeholder}
+        class="input input-bordered input-primary w-full max-w-xs"
+        {...props}
+      />
     </div>
   )
 })
