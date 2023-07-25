@@ -30,7 +30,7 @@ export const PieChartImmersionType = component$(() => {
       if (session.immersion_type === 'passive') {
         immersionTotal.passiveTotal += (session.seconds_immersed / 60)
       }
-      if (session.immersion_type === 'active') {
+      if (session.immersion_type === 'study') {
         immersionTotal.studyTotal += (session.seconds_immersed / 60)
       }
     })
