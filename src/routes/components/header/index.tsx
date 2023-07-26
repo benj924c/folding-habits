@@ -2,6 +2,7 @@ import { $, component$, useContext } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { userDetailsContext } from "~/root";
 import { supabase } from "~/utils/supabase";
+import { UserIcon } from "./components/UserIcon";
 
 export const Header = component$(() => {
   const userDetails = useContext(userDetailsContext)
@@ -26,7 +27,10 @@ export const Header = component$(() => {
             <Link class="btn btn-ghost normal-case" href="/dashboard">Dashboard</Link>
             )}
           {userDetails.isLoggedIn ? (
-            <Link class="btn btn-ghost normal-case" href="/" onClick$={handleLogout}>Logout</Link>
+            <UserIcon>
+              <Link class="btn btn-ghost normal-case" href="/profile">Profile</Link>
+              <Link class="btn btn-ghost normal-case" href="/" onClick$={handleLogout}>Logout</Link>
+            </UserIcon>
             ) : (
               <>
               <Link class="btn btn-ghost normal-case" href="/login">Login</Link>
