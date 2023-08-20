@@ -6,11 +6,12 @@ import { type InitialValues, useForm, zodForm$ } from "@modular-forms/qwik"
 import { Button } from "~/components/Button"
 import { Input } from "~/components/Input"
 import { userDetailsContext } from "~/root"
-import { supabase } from "~/utils/supabase"
+import { supabaseBrowserClient, supabaseServerClient } from "~/utils/supabase";
 
-export const useRedirectIfLoggedIn = routeLoader$(async ({ cookie, redirect }) => {
-  const accessToken = cookie.get('my-access-token')
-  const { data } = await supabase.auth.getUser(accessToken?.value)
+export const useRedirectIfLoggedIn = routeLoader$(async (requestEv) => {
+  const { redirect } = requestEv
+  const supabaseClient = supabaseServerClient(requestEv)
+  const { data } = await (await supabaseClient).auth.getUser()
   if (data.user != null) {
     throw redirect(
       308,
@@ -45,7 +46,7 @@ export default component$(() => {
   const navigate = useNavigate()
 
   const handleLogin: QRL<SubmitHandler<LoginForm>> = $(async (values) => {
-    const { data, error: supabaseError } = await supabase.auth.signInWithPassword({
+    const { data, error: supabaseError } = await supabaseBrowserClient.auth.signInWithPassword({
       email: values.email,
       password: values.password,
     })

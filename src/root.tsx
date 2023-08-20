@@ -8,7 +8,7 @@ import { RouterHead } from "./components/router-head/router-head";
 import type { Session } from "@supabase/supabase-js";
 
 import "./global.css";
-import { supabase } from "./utils/supabase";
+import { supabaseBrowserClient } from "./utils/supabase";
 
 export interface IuserDetails {
   isLoggedIn: boolean
@@ -27,7 +27,7 @@ export default component$(() => {
   const userDetails = useStore<IuserDetails>({ isLoggedIn: false, session: null })
   useContextProvider(userDetailsContext, userDetails)
   useTask$(async () => {
-    const { data, error } = await supabase.auth.getSession()
+    const { data, error } = await supabaseBrowserClient.auth.getSession()
     if (data.session) {
       console.log(data.session)
       userDetails.isLoggedIn = true

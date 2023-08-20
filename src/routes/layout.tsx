@@ -1,8 +1,7 @@
-import { component$, Slot, useContext, useTask$, useVisibleTask$ } from "@builder.io/qwik";
+import { component$, Slot, useContext, useTask$ } from "@builder.io/qwik";
 import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
 import { Header } from "./components/header";
 import { Footer } from "./components/footer";
-import { setSupabaseCookie } from "~/utils/supabase";
 import { userDetailsContext } from "~/root";
 import { createServerClient } from "supabase-auth-helpers-qwik";
 
@@ -44,12 +43,10 @@ export default component$(() => {
     userDetails.session = isLoggedIn.value.session
   })
 
-  useVisibleTask$(() => setSupabaseCookie())
-
   return (
     <div class="flex flex-col min-h-screen">
       <Header />
-      <main class="grid max-w-7xl prose my-16 grow self-center p-4">
+      <main class="grid my-16 grow self-center max-w-6xl prose">
         <Slot />
       </main>
       <Footer />
