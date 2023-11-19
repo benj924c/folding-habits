@@ -1,30 +1,39 @@
-import { component$, createContextId, useContextProvider, useTask$, useStore } from "@builder.io/qwik";
+import {
+  component$,
+  createContextId,
+  useContextProvider,
+  useTask$,
+  useStore,
+} from "@builder.io/qwik"
 import {
   QwikCityProvider,
   RouterOutlet,
   ServiceWorkerRegister,
-} from "@builder.io/qwik-city";
-import { RouterHead } from "./components/router-head/router-head";
-import type { Session } from "@supabase/supabase-js";
+} from "@builder.io/qwik-city"
+import { RouterHead } from "./components/router-head/router-head"
+import type { Session } from "@supabase/supabase-js"
 
-import "./global.css";
-import { supabaseBrowserClient } from "./utils/supabase";
+import "./global.css"
+import { supabaseBrowserClient } from "./utils/supabase"
 
 export interface IuserDetails {
   isLoggedIn: boolean
   session: Session | null
 }
-export const userDetailsContext = createContextId<IuserDetails>("userDetails");
+export const userDetailsContext = createContextId<IuserDetails>("userDetails")
 
 export default component$(() => {
   /**
    * The root of a QwikCity site always start with the <QwikCityProvider> component,
    * immediately followed by the document's <head> and <body>.
-  *
-  * Don't remove the `<head>` and `<body>` elements.
-  */
+   *
+   * Don't remove the `<head>` and `<body>` elements.
+   */
 
-  const userDetails = useStore<IuserDetails>({ isLoggedIn: false, session: null })
+  const userDetails = useStore<IuserDetails>({
+    isLoggedIn: false,
+    session: null,
+  })
   useContextProvider(userDetailsContext, userDetails)
   useTask$(async () => {
     const { data, error } = await supabaseBrowserClient.auth.getSession()
@@ -52,5 +61,5 @@ export default component$(() => {
         <ServiceWorkerRegister />
       </body>
     </QwikCityProvider>
-  );
-});
+  )
+})

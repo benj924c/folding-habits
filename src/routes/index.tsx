@@ -1,15 +1,18 @@
-import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import { component$ } from "@builder.io/qwik"
+import type { DocumentHead } from "@builder.io/qwik-city"
 
 export default component$(() => {
-
   return (
-    <>
+    <div class="prose">
       <h1>Folding Habits</h1>
-      <p>Welcome to my little side project. I'm building this to assist me in my language learning journey. If you're following the refold method, perhaps you might find this useful as well</p>
-    </>
+      <p>
+        Welcome to my little side project. I'm building this to assist me in my
+        language learning journey. If you're following the refold method,
+        perhaps you might find this useful as well
+      </p>
+    </div>
   )
-});
+})
 
 export const head: DocumentHead = {
   title: "Folding habits",
@@ -19,4 +22,4 @@ export const head: DocumentHead = {
       content: "An unofficial refold habit tracker",
     },
   ],
-};
+}

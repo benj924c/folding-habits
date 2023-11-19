@@ -11,7 +11,7 @@ export const Footer = component$(() => {
         <a href="/about" class="link link-hover">About</a>
       </div>
       <div>
-        <a href="https://ko-fi.com/juicybenjamin" target="_blank">
+        <a class="hover:scale-105 transition-all" href="https://ko-fi.com/juicybenjamin" target="_blank">
           <Image width="223" height="30" src="https://ko-fi.com/img/githubbutton_sm.svg" />
         </a>
       </div>

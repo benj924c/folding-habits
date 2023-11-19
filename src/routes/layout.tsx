@@ -1,9 +1,9 @@
-import { component$, Slot, useContext, useTask$ } from "@builder.io/qwik";
-import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
-import { Header } from "./components/header";
-import { Footer } from "./components/footer";
-import { userDetailsContext } from "~/root";
-import { createServerClient } from "supabase-auth-helpers-qwik";
+import { component$, Slot, useContext, useTask$ } from "@builder.io/qwik"
+import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city"
+import { Header } from "./components/header"
+import { Footer } from "./components/footer"
+import { userDetailsContext } from "~/root"
+import { createServerClient } from "supabase-auth-helpers-qwik"
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // Control caching for this request for best performance and to reduce hosting costs:
@@ -13,17 +13,17 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
     staleWhileRevalidate: 60 * 60 * 24 * 7,
     // Max once every 5 seconds, revalidate on the server to get a fresh version of this page
     maxAge: 5,
-  });
-};
+  })
+}
 
 export const useIsLoggedIn = routeLoader$(async (requestEv) => {
   const { cookie } = requestEv
-  const refreshToken = cookie.get('my-refresh-token')?.value ?? ""
-  const accessToken = cookie.get('my-access-token')?.value ?? ""
+  const refreshToken = cookie.get("my-refresh-token")?.value ?? ""
+  const accessToken = cookie.get("my-access-token")?.value ?? ""
   const supabaseClient = createServerClient(
     requestEv.env.get("SUPABASE_URL")!,
     requestEv.env.get("SUPABASE_ANON_KEY")!,
-    requestEv
+    requestEv,
   )
   const { data } = await supabaseClient.auth.getUser(accessToken)
   await supabaseClient.auth.setSession({
@@ -52,4 +52,4 @@ export default component$(() => {
       <Footer />
     </div>
   )
-});
+})

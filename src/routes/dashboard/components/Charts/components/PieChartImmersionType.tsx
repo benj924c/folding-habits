@@ -36,9 +36,20 @@ export const PieChartImmersionType = component$(() => {
     })
   })
 
+  const mytheme = {
+    "primary": "#ff7ac6",
+    "secondary": "#bf95f9",
+    "accent": "#ffb86b",
+    "neutral": "#414558",
+    "base-100": "#272935",
+    "info": "#8be8fd",
+    "success": "#52fa7c",
+    "warning": "#f1fa89",
+    "error": "#ff5757",
+  }
+
   useVisibleTask$(({ track, cleanup }) => {
     track(() => (immersionTotal.activeTotal, immersionTotal.passiveTotal, immersionTotal.studyTotal ))
-
     const pieChart = new Chart(canvasRef.value ?? "", {
       type: "doughnut",
       data: {
@@ -46,6 +57,9 @@ export const PieChartImmersionType = component$(() => {
         datasets: [{
           label: 'Minutes Immersed',
           data: [immersionTotal.activeTotal, immersionTotal.passiveTotal, immersionTotal.studyTotal],
+          backgroundColor: [mytheme["primary"], mytheme["secondary"], mytheme["accent"]],
+          borderColor: mytheme["neutral"],
+          borderWidth: 3
         }]
       },
     })
@@ -55,7 +69,7 @@ export const PieChartImmersionType = component$(() => {
 
   return(
     <>
-      <div class="w-[25rem]">
+      <div class="w-[25rem] h-[25rem]">
         <canvas class="w-full h-full" ref={canvasRef}/>
       </div>
     </>

@@ -18,7 +18,7 @@ export const AddImmersionButton = component$<AddImmersionSessionProps>(({
 
   return (
     <>
-      <Button color="neutral" class="w-32 normal-case join-item" type="button" onClick={$(() => isFormVisible.value = true)}>
+      <Button color="neutral" class="w-32 normal-case" type="button" onClick={$(() => isFormVisible.value = true)}>
         <Slot />
       </Button>
       <Modal onClose={$(() => isFormVisible.value = false)} isVisible={isFormVisible}>

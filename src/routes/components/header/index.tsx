@@ -1,14 +1,14 @@
 import { $, component$, useContext } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { userDetailsContext } from "~/root";
-import { supabase } from "~/utils/supabase";
+import { supabaseBrowserClient } from "~/utils/supabase";
 import { UserIcon } from "./components/UserIcon";
 
 export const Header = component$(() => {
   const userDetails = useContext(userDetailsContext)
 
   const handleLogout = $(async () => {
-    const { error } = await supabase.auth.signOut()
+    const { error } = await supabaseBrowserClient.auth.signOut()
     if (error) {
       console.error(error)
     } else {
@@ -23,9 +23,10 @@ export const Header = component$(() => {
         <Link class="btn btn-ghost normal-case" href="/" >Logo</Link>
         <nav class="flex gap-2">
           <Link class="btn btn-ghost normal-case" href="/">Home</Link>
+          <Link class="btn btn-ghost normal-case" href="/challenges">Challenges</Link>
           {userDetails.isLoggedIn && (
             <Link class="btn btn-ghost normal-case" href="/dashboard">Dashboard</Link>
-            )}
+          )}
           {userDetails.isLoggedIn ? (
             <UserIcon>
               <Link class="btn btn-ghost normal-case" href="/profile">Profile</Link>
@@ -33,10 +34,11 @@ export const Header = component$(() => {
             </UserIcon>
             ) : (
               <>
-              <Link class="btn btn-ghost normal-case" href="/login">Login</Link>
-              <Link class="btn btn-ghost normal-case" href="/signup">Signup</Link>
-            </>
-          )}
+                <Link class="btn btn-ghost normal-case" href="/login">Login</Link>
+                <Link class="btn btn-ghost normal-case" href="/signup">Signup</Link>
+              </>
+            )
+          }
         </nav>
       </header>
     </div>
