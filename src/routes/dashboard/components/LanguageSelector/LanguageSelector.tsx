@@ -1,6 +1,5 @@
 import { component$, useSignal, useTask$ } from "@builder.io/qwik"
 import { Image } from "@unpic/qwik"
-import { HiArrowPathSolid } from "@qwikest/icons/heroicons"
 export interface LanguageSelectorProps {
   country: string
 }
@@ -27,14 +26,11 @@ export const LanguageSelector = component$<LanguageSelectorProps>(
     // TODO: Add a button to remove a language (maybe a trash can icon on hover)
     return (
       <>
-        <div class="flex relative">
+        <div class="dropdown">
           <button
             onClick$={() => (isSelectorOpen.value = !isSelectorOpen.value)}
-            class="flex justify-center items-center w-14 h-14 indicator group"
+            class="w-14 h-14"
           >
-            <span class="indicator-item badge badge-secondary m-0 group-hover:flex self-center hidden">
-              <HiArrowPathSolid />
-            </span>
             <Image
               class="m-0 mask mask-circle"
               src="https://flagcdn.com/w320/dk.png"
