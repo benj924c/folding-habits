@@ -38,7 +38,8 @@ export default component$(() => {
   const isLoggedIn = useIsLoggedIn()
   const userDetails = useContext(userDetailsContext)
 
-  useTask$(() => {
+  useTask$(({ track }) => {
+    track(() => isLoggedIn.value.isLoggedIn)
     userDetails.isLoggedIn = isLoggedIn.value.isLoggedIn
     userDetails.session = isLoggedIn.value.session
   })

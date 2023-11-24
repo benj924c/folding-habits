@@ -1,5 +1,8 @@
 import { $ } from "@builder.io/qwik"
-import type { RequestEventLoader } from "@builder.io/qwik-city"
+import type {
+  RequestEventAction,
+  RequestEventLoader,
+} from "@builder.io/qwik-city"
 import {
   createServerClient,
   createBrowserClient,
@@ -13,10 +16,11 @@ export const supabaseBrowserClient = createBrowserClient(
   SUPABASE_ANON_KEY,
 )
 
-export const supabaseServerClient = $(async (requestEv: RequestEventLoader) =>
-  createServerClient(
-    requestEv.env.get("SUPABASE_URL")!,
-    requestEv.env.get("SUPABASE_ANON_KEY")!,
-    requestEv,
-  ),
+export const supabaseServerClient = $(
+  async (requestEv: RequestEventAction | RequestEventLoader) =>
+    createServerClient(
+      requestEv.env.get("SUPABASE_URL")!,
+      requestEv.env.get("SUPABASE_ANON_KEY")!,
+      requestEv,
+    ),
 )

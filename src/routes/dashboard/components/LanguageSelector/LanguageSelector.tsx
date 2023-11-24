@@ -15,7 +15,7 @@ export const LanguageSelector = component$<LanguageSelectorProps>(
           "https://restcountries.com/v3.1/name/" + country,
         )
         const RestCountryJson = await RestCountry.json()
-        console.log(RestCountryJson)
+        // console.log(RestCountryJson)
       } catch (e) {
         console.error(e)
       }
