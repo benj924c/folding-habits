@@ -23,6 +23,9 @@ dependencies:
   chart.js:
     specifier: ^4.4.0
     version: 4.4.0
+  flag-icons:
+    specifier: ^7.0.2
+    version: 7.0.2
   install:
     specifier: ^0.13.0
     version: 0.13.0
@@ -2630,6 +2633,10 @@ packages:
       locate-path: 6.0.0
       path-exists: 4.0.0
     dev: true
+
+  /flag-icons@7.0.2:
+    resolution: {integrity: sha512-d54NSa0t4GcKflhZWzxjpxj315DScbtdzqVdZKJl+R0zjtHNiLLuUl9Lis+UJRRL/YJbJ80JXP9FYQ4u/eGXAg==}
+    dev: false
 
   /flat-cache@3.2.0:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}

@@ -3,7 +3,7 @@ import { $, component$, useContext } from "@builder.io/qwik"
 import type { SubmitHandler } from "@modular-forms/qwik"
 import { reset, useForm, zodForm$ } from "@modular-forms/qwik"
 import { userDetailsContext } from "~/root"
-import { useImmersionFormLoader } from "../../.."
+import { useImmersionFormLoader, useReload } from "../../.."
 import { Input } from "~/components/Input"
 import { z } from "@builder.io/qwik-city"
 import { Button } from "~/components/Button"
@@ -20,14 +20,14 @@ export const immersionSessionSchema = z.object({
 export type ImmersionSessionForm = z.infer<typeof immersionSessionSchema>
 
 interface ImmersionFormProps {
-  refetchSupabaseData: () => void
   immersionType: "active" | "passive" | "study"
   language: string
   onClose: QRL
 }
 
 export const ImmersionForm = component$<ImmersionFormProps>(
-  ({ refetchSupabaseData, immersionType, language, onClose }) => {
+  ({ immersionType, language, onClose }) => {
+    const refetchSupabaseData = useReload()
     const [immersionSessionForm, { Form, Field }] =
       useForm<ImmersionSessionForm>({
         loader: useImmersionFormLoader(),
@@ -54,7 +54,7 @@ export const ImmersionForm = component$<ImmersionFormProps>(
         if (error) {
           console.error(error)
         } else {
-          refetchSupabaseData()
+          refetchSupabaseData.submit()
           reset(immersionSessionForm)
           onClose()
         }

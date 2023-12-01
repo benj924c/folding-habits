@@ -1,19 +1,26 @@
-import { $, component$, createContextId, useContext, useContextProvider, useSignal, useStore } from "@builder.io/qwik"
+import {
+  component$,
+  createContextId,
+  useContextProvider,
+  useStore,
+} from "@builder.io/qwik"
 import { type ImmersionSessionForm } from "./components/AddImmersionButton/components/ImmersionForm"
-import { supabaseBrowserClient, supabaseServerClient } from "~/utils/supabase"
+import { supabaseServerClient } from "~/utils/supabase"
 import { type PostgrestError } from "@supabase/supabase-js"
 import type { IImmersionSessions } from "~/models/IImmersionSessions"
-import { Link, routeLoader$ } from "@builder.io/qwik-city"
-import { type InitialValues} from "@modular-forms/qwik"
+import { Link, routeAction$, routeLoader$ } from "@builder.io/qwik-city"
+import { type InitialValues } from "@modular-forms/qwik"
 import Charts from "./components/Charts"
 import { AddImmersionButton } from "./components/AddImmersionButton/AddImmersionButton"
-import AddLanguageButton from "./components/AddLanguageButton"
-import { userDetailsContext } from "~/root"
 import { LanguageSelector } from "./components/LanguageSelector/LanguageSelector"
+import type { IUserLanguages } from "~/models/IUserLanguages"
 
-
-export interface IsupabaseData {
+export interface IsupabaseImmersionData {
   data: IImmersionSessions[] | null
+  error: PostgrestError | null
+}
+export interface IsupabaseUserLanguagesData {
+  data: IUserLanguages[] | null
   error: PostgrestError | null
 }
 
@@ -22,34 +29,46 @@ export const useRedirectIfLoggedIn = routeLoader$(async (requestEv) => {
   const supabaseClient = supabaseServerClient(requestEv)
   const { data } = await (await supabaseClient).auth.getUser()
   if (data.user == null) {
-    throw redirect(
-      308,
-      '/login'
-      )
+    throw redirect(308, "/login")
   }
 })
 
 export const useGetLanguages = routeLoader$(async (requestEv) => {
   const supabaseClient = supabaseServerClient(requestEv)
-  const { data, error } = await (await supabaseClient).from('languages').select('*')
-  return { data, error}
+  const { data, error } = await (await supabaseClient)
+    .from("languages")
+    .select("*")
+  return { data, error }
 })
 
 export const useGetUserLanguages = routeLoader$(async (requestEv) => {
   const supabaseClient = supabaseServerClient(requestEv)
   const { data: userDetails } = await (await supabaseClient).auth.getUser()
-  const { data, error } = await (await supabaseClient).from('user_languages').select('*').eq('user_id', userDetails.user?.id)
-  return { data, error}
+  const { data, error } = await (
+    await supabaseClient
+  )
+    .from("user_languages")
+    .select("*")
+    .eq("user_id", userDetails.user?.id)
+  return { data, error } as IsupabaseUserLanguagesData
 })
 
 export const useGetImmersionSessions = routeLoader$(async (requestEv) => {
   const supabaseClient = supabaseServerClient(requestEv)
   const { data: userDetails } = await (await supabaseClient).auth.getUser()
-  const { data, error } = await (await supabaseClient).from('immersion_sessions').select('*').eq('user_id', userDetails.user?.id)
-  return { data, error}
+  const { data, error } = await (
+    await supabaseClient
+  )
+    .from("immersion_sessions")
+    .select("*")
+    .eq("user_id", userDetails.user?.id)
+  return { data, error } as IsupabaseImmersionData
 })
+export const useReload = routeAction$(async () => {})
 
-export const useImmersionFormLoader = routeLoader$<InitialValues<ImmersionSessionForm>>(() => ({
+export const useImmersionFormLoader = routeLoader$<
+  InitialValues<ImmersionSessionForm>
+>(() => ({
   immersion_type: "",
   active_type: null,
   content_type: "",
@@ -57,30 +76,23 @@ export const useImmersionFormLoader = routeLoader$<InitialValues<ImmersionSessio
   minutes_immersed: 0,
 }))
 
-export const immersionDataContext = createContextId<IsupabaseData>("immersionData")
+export const immersionDataContext =
+  createContextId<IsupabaseImmersionData>("immersionData")
 
 export default component$(() => {
+  // I need to use it here as it's the index file, otherwise I'll get an error when using it in another component
+  //eslint-disable-next-line
+  const languages = useGetLanguages()
   const immersionSessions = useGetImmersionSessions()
-  const supabaseData = useStore<IsupabaseData>({ data: immersionSessions.value.data as IImmersionSessions[], error: immersionSessions.value.error })
+  const supabaseData = useStore<IsupabaseImmersionData>({
+    data: immersionSessions.value.data as IImmersionSessions[],
+    error: immersionSessions.value.error,
+  })
   useContextProvider(immersionDataContext, supabaseData)
   const userLanguagesData = useGetUserLanguages()
-  const userLanguages = useSignal(userLanguagesData.value)
   const currentLanguage = useStore({
-    language: userLanguages.value.data?.[0]?.language,
-    country: userLanguages.value.data?.[0]?.country_name
-  })
-  const userDetails = useContext(userDetailsContext)
-  const refetchSupabaseData = $(async ()=> {
-    const { data, error } = await supabaseBrowserClient
-    .from('immersion_sessions')
-    .select('*')
-    supabaseData.data = data as IImmersionSessions[]
-    supabaseData.error = error
-  })
-
-  const refetchUserLanguages = $(async ()=> {
-    const { data, error } = await supabaseBrowserClient.from('user_languages').select('*').eq('user_id', userDetails.session?.user.id)
-    userLanguages.value = { data, error }
+    language: userLanguagesData.value.data?.[0]?.language,
+    country: userLanguagesData.value.data?.[0]?.country_code_name,
   })
 
   // TODO: Consider using a context for the currentLanguage over prop drilling
@@ -97,41 +109,35 @@ export default component$(() => {
       <div class="">
         <h1>Welcome to your habit dashboard {currentLanguage.country}</h1>
       </div>
-      <div class="grid grid-cols-[1fr_10fr_3fr] gap-2">
-        <div class="flex flex-col">
-          <div class="tabs">
-            <AddLanguageButton refetchLanguages={refetchUserLanguages}/>
-              {userLanguages.value.data?.reverse().map((language) => (
-                <button
-                key={language.language}
-                class={`tab tab-bordered ${currentLanguage.language === language.language ? "tab-active" : null} w-full`}
-                onClick$={$(() => {
-                  currentLanguage.language = language.language
-                  currentLanguage.country = language.country_name
-                })}
-                >
-                  <span class="">{language.language}</span>
-                </button>
-              )
-              )}
-          </div>
-        </div>
+      <div class="grid grid-cols-[10fr_3fr] gap-2">
         <div class="grid">
           <div class="w-full flex justify-center items-center bg-neutral-focus gap-2 p-2 justify-self-center rounded-t-md">
-            <LanguageSelector country={currentLanguage.country} />
-            <Link class="btn btn-ghost btn-md btn-wide normal-case">Charts</Link>
-            <Link class="btn btn-ghost btn-md btn-wide normal-case">Charts</Link>
-            <Link class="btn btn-ghost btn-md btn-wide normal-case">Charts</Link>
+            <LanguageSelector
+              country={currentLanguage.country}
+              userLanguages={userLanguagesData}
+            />
+            <Link class="btn btn-ghost btn-md btn-wide normal-case">
+              Charts
+            </Link>
+            <Link class="btn btn-ghost btn-md btn-wide normal-case">
+              Charts
+            </Link>
+            <Link class="btn btn-ghost btn-md btn-wide normal-case">
+              Charts
+            </Link>
           </div>
           <div class="rounded-b-md bg-neutral p-8 prose-base">
-            <p>From here you can update your habits and see how far you've come</p>
+            <p>
+              From here you can update your habits and see how far you've come
+            </p>
             <Charts />
-            {supabaseData.data && supabaseData.data.map((item) => {
-              return (
-                <div key={item.id} class="flex gap-4">
-                  <p>{item.content_name}</p>
-                  <p>{item.seconds_immersed / 60}</p>
-                </div>
+            {supabaseData.data &&
+              supabaseData.data.map((item) => {
+                return (
+                  <div key={item.id} class="flex gap-4">
+                    <p>{item.content_name}</p>
+                    <p>{item.seconds_immersed / 60}</p>
+                  </div>
                 )
               })}
           </div>
@@ -141,13 +147,22 @@ export default component$(() => {
             <h3>Add immersion</h3>
           </div>
           <div class="rounded-b-md bg-neutral p-2">
-            <AddImmersionButton language={currentLanguage.language} immersionType="active" refetchSupabaseData={refetchSupabaseData}>
+            <AddImmersionButton
+              language={currentLanguage.language}
+              immersionType="active"
+            >
               👀 Active
             </AddImmersionButton>
-            <AddImmersionButton language={currentLanguage.language} immersionType="passive" refetchSupabaseData={refetchSupabaseData}>
+            <AddImmersionButton
+              language={currentLanguage.language}
+              immersionType="passive"
+            >
               👂🏽 Passive
             </AddImmersionButton>
-            <AddImmersionButton language={currentLanguage.language} immersionType="study" refetchSupabaseData={refetchSupabaseData}>
+            <AddImmersionButton
+              language={currentLanguage.language}
+              immersionType="study"
+            >
               📚 Study
             </AddImmersionButton>
           </div>

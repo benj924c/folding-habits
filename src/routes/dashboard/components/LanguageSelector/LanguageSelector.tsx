@@ -1,26 +1,16 @@
-import { component$, useSignal, useTask$ } from "@builder.io/qwik"
-import { Image } from "@unpic/qwik"
+import type { Signal } from "@builder.io/qwik"
+import { component$, useSignal } from "@builder.io/qwik"
+import "@flags"
+import AddLanguageButton from "../AddLanguageButton"
 export interface LanguageSelectorProps {
-  country: string
+  country?: string
+  userLanguages: Signal
 }
 
 export const LanguageSelector = component$<LanguageSelectorProps>(
   ({ country }) => {
     const isSelectorOpen = useSignal(false)
-
-    useTask$(async ({ track }) => {
-      track(() => country)
-      try {
-        const RestCountry = await fetch(
-          "https://restcountries.com/v3.1/name/" + country,
-        )
-        const RestCountryJson = await RestCountry.json()
-        // console.log(RestCountryJson)
-      } catch (e) {
-        console.error(e)
-      }
-    })
-
+    const flag = country ?? "dk"
     // TODO: Map over user's languages and display them
     // TODO: Add a button to add a language (take the one you already made)
     // TODO: Add a button to remove a language (maybe a trash can icon on hover)
@@ -31,23 +21,12 @@ export const LanguageSelector = component$<LanguageSelectorProps>(
             onClick$={() => (isSelectorOpen.value = !isSelectorOpen.value)}
             class="w-14 h-14"
           >
-            <Image
-              class="m-0 mask mask-circle"
-              src="https://flagcdn.com/w320/dk.png"
-              width="56"
-              aspectRatio="1/1"
-              layout="constrained"
-            />
+            <span class={`fi fi-${flag} fis text-5xl mask mask-circle`} />
           </button>
           {isSelectorOpen.value && (
-            <div class="absolute right-[-100%]">
-              <Image
-                class="m-0 mask mask-circle"
-                src="https://flagcdn.com/w320/dk.png"
-                width="56"
-                aspectRatio="1/1"
-                layout="constrained"
-              />
+            <div class="absolute right-[-100%] flex gap-2">
+              <span class="fi fi-gr fis text-5xl mask mask-circle" />
+              <AddLanguageButton />
             </div>
           )}
         </div>

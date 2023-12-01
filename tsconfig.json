@@ -18,7 +18,8 @@
     "noEmit": true,
     "types": ["node", "vite/client"],
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@flags": ["./node_modules/flag-icons/css/flag-icons.min.css"]
     }
   },
   "files": ["./.eslintrc.cjs"],

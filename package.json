@@ -50,6 +50,7 @@
     "@supabase/supabase-js": "^2.38.4",
     "@unpic/qwik": "^0.0.23",
     "chart.js": "^4.4.0",
+    "flag-icons": "^7.0.2",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
     "npm": "^9.9.2",
