@@ -1,39 +1,51 @@
-import { $, component$, useContext, useSignal } from "@builder.io/qwik"
+import { $, component$, useSignal } from "@builder.io/qwik"
 import { Button } from "~/components/Button"
 import { Modal } from "~/components/Modal"
 import { Select } from "~/components/Select"
-import { useGetLanguages, useReload } from "../.."
-import { userDetailsContext } from "~/root"
-import { supabaseBrowserClient } from "~/utils/supabase"
+import { useGetLanguages } from "../.."
+// import { userDetailsContext } from "~/root"
+// import { supabaseBrowserClient } from "~/utils/supabase"
+import { routeAction$ } from "@builder.io/qwik-city"
+
+export const useAddLanguage = routeAction$(() => {
+  return {
+    yolo: "yolo",
+  }
+})
 
 export interface AddLanguageButtonProps {}
 
 export default component$<AddLanguageButtonProps>(() => {
-  const refetchLanguages = useReload()
   const isModalVisible = useSignal(false)
   const languages = useGetLanguages()
   const selectedLanguage = useSignal("")
-  const userDetails = useContext(userDetailsContext)
+  // const userDetails = useContext(userDetailsContext)
   const isError = useSignal(false)
 
+  const add = useAddLanguage()
+
+
+
+  console.log(add)
+
   // TODO: use serverclient instead and make use of a route action
-  const handleClickAdd = $(async () => {
-    const { error } = await supabaseBrowserClient
-      .from("user_languages")
-      .insert({
-        user_id: userDetails.session?.user.id,
-        language: selectedLanguage.value,
-        country_code_name: selectedLanguage.value,
-      })
-    if (error) {
-      console.error(error)
-      isError.value = true
-    } else {
-      refetchLanguages.submit()
-      isModalVisible.value = false
-      isError.value = false
-    }
-  })
+  // const handleClickAdd = $(async () => {
+  //   const { error } = await supabaseBrowserClient
+  //     .from("user_languages")
+  //     .insert({
+  //       user_id: userDetails.session?.user.id,
+  //       language: selectedLanguage.value,
+  //       country_code_name: selectedLanguage.value,
+  //     })
+  //   if (error) {
+  //     console.error(error)
+  //     isError.value = true
+  //   } else {
+  //     refetchLanguages.submit()
+  //     isModalVisible.value = false
+  //     isError.value = false
+  //   }
+  // })
   if (languages.value.data == null) return null
   return (
     <>
@@ -64,7 +76,8 @@ export default component$<AddLanguageButtonProps>(() => {
           {isError.value && (
             <p class="text-red-500">You've already added that language</p>
           )}
-          <Button onClick={handleClickAdd}>Add</Button>
+          <Button onClick={add.submit}>Add</Button>
+          <button onClick$={add.submit}> </button>
         </div>
       </Modal>
     </>

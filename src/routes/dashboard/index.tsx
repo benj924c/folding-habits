@@ -8,7 +8,7 @@ import { type ImmersionSessionForm } from "./components/AddImmersionButton/compo
 import { supabaseServerClient } from "~/utils/supabase"
 import { type PostgrestError } from "@supabase/supabase-js"
 import type { IImmersionSessions } from "~/models/IImmersionSessions"
-import { Link, routeAction$, routeLoader$ } from "@builder.io/qwik-city"
+import { Link, routeLoader$ } from "@builder.io/qwik-city"
 import { type InitialValues } from "@modular-forms/qwik"
 import Charts from "./components/Charts"
 import { AddImmersionButton } from "./components/AddImmersionButton/AddImmersionButton"
@@ -64,7 +64,6 @@ export const useGetImmersionSessions = routeLoader$(async (requestEv) => {
     .eq("user_id", userDetails.user?.id)
   return { data, error } as IsupabaseImmersionData
 })
-export const useReload = routeAction$(async () => {})
 
 export const useImmersionFormLoader = routeLoader$<
   InitialValues<ImmersionSessionForm>
@@ -148,19 +147,19 @@ export default component$(() => {
           </div>
           <div class="rounded-b-md bg-neutral p-2">
             <AddImmersionButton
-              language={currentLanguage.language}
+              language={currentLanguage.language ?? ""}
               immersionType="active"
             >
               👀 Active
             </AddImmersionButton>
             <AddImmersionButton
-              language={currentLanguage.language}
+              language={currentLanguage.language ?? ""}
               immersionType="passive"
             >
               👂🏽 Passive
             </AddImmersionButton>
             <AddImmersionButton
-              language={currentLanguage.language}
+              language={currentLanguage.language ?? ""}
               immersionType="study"
             >
               📚 Study
