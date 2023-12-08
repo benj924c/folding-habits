@@ -82,10 +82,15 @@ export { useAddLanguage }
 export const immersionDataContext =
   createContextId<IsupabaseImmersionData>("immersionData")
 
+export const currentLanguageContext = createContextId<{
+  language: string | undefined
+  country: string | undefined
+}>("currentLanguage")
+
 export default component$(() => {
   // I need to use it here as it's the index file, otherwise I'll get an error when using it in another component
   //eslint-disable-next-line
-  const languages = useGetLanguages()
+  const languages = useGetLanguages() // TODO: Export this function from the place where it's used and then import it in this file and re export it
   const immersionSessions = useGetImmersionSessions()
   const supabaseData = useStore<IsupabaseImmersionData>({
     data: immersionSessions.value.data as IImmersionSessions[],
@@ -97,6 +102,8 @@ export default component$(() => {
     language: userLanguagesData.value.data?.[0]?.language,
     country: userLanguagesData.value.data?.[0]?.country_code_name,
   })
+
+  useContextProvider(currentLanguageContext, currentLanguage)
 
   // TODO: Consider using a context for the currentLanguage over prop drilling
   // TODO: Add sub route for language
@@ -120,10 +127,7 @@ export default component$(() => {
       <div class="grid grid-cols-[10fr_3fr] gap-2">
         <div class="grid">
           <div class="w-full flex justify-center items-center bg-neutral-focus gap-2 p-2 justify-self-center rounded-t-md">
-            <LanguageSelector
-              country={currentLanguage.country}
-              userLanguages={userLanguagesData}
-            />
+            <LanguageSelector />
             <Link class="btn btn-ghost btn-md btn-wide normal-case">
               Charts
             </Link>
