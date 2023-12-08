@@ -58,7 +58,7 @@ export default component$<AddLanguageButtonProps>(() => {
   return (
     <>
       <button
-        class="flex items-center justify-center text-3xl p-2 w-10 h-10 rounded-full hover:bg-secondary-content transition-all"
+        class="btn btn-circle btn-ghost text-3xl"
         onClick$={$(() => (isModalVisible.value = true))}
       >
         +
