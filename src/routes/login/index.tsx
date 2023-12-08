@@ -13,8 +13,8 @@ import { supabaseServerClient } from "~/utils/supabase"
 
 export const useRedirectIfLoggedIn = routeLoader$(async (requestEv) => {
   const { redirect } = requestEv
-  const supabaseClient = supabaseServerClient(requestEv)
-  const { data } = await (await supabaseClient).auth.getUser()
+  const supabaseClient = await supabaseServerClient(requestEv)
+  const { data } = await supabaseClient.auth.getUser()
   if (data.user != null) {
     throw redirect(308, "/dashboard")
   }
