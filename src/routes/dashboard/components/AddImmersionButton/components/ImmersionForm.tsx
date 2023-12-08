@@ -27,7 +27,6 @@ interface ImmersionFormProps {
 
 export const ImmersionForm = component$<ImmersionFormProps>(
   ({ immersionType, language, onClose }) => {
-    // const refetchSupabaseData = useReload()
     const [immersionSessionForm, { Form, Field }] =
       useForm<ImmersionSessionForm>({
         loader: useImmersionFormLoader(),

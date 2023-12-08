@@ -1,4 +1,4 @@
-import type { PropFunction } from "@builder.io/qwik"
+import type { QRL } from "@builder.io/qwik"
 import { Slot, component$ } from "@builder.io/qwik"
 
 interface ButtonProps {
@@ -7,7 +7,7 @@ interface ButtonProps {
   color?: "primary" | "secondary" | "accent" | "ghost" | "link" | "neutral"
   isLoading?: boolean
   disabled?: boolean
-  onClick?: PropFunction<() => void>
+  onClick?: QRL
 }
 
 export const Button = component$<ButtonProps>(
