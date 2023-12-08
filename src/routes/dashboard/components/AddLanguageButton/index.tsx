@@ -4,12 +4,27 @@ import { Modal } from "~/components/Modal"
 import { Select } from "~/components/Select"
 import { useGetLanguages } from "../.."
 // import { userDetailsContext } from "~/root"
-// import { supabaseBrowserClient } from "~/utils/supabase"
 import { routeAction$ } from "@builder.io/qwik-city"
+import { supabaseServerClient } from "~/utils/supabase"
 
-export const useAddLanguage = routeAction$(() => {
-  return {
-    yolo: "yolo",
+export const useAddLanguage = routeAction$(async (data, requestEv) => {
+  const supabaseClient = await supabaseServerClient(requestEv)
+  const { data: userData } = await supabaseClient.auth.getUser()
+
+  const { error } = await supabaseClient.from("user_languages").insert({
+    user_id: userData.user?.id,
+    language: data.language,
+    country_code_name: data.country,
+  })
+  if (error) {
+    console.error(error)
+    return {
+      error,
+    }
+  } else {
+    return {
+      success: "whoops",
+    }
   }
 })
 
@@ -19,34 +34,27 @@ export default component$<AddLanguageButtonProps>(() => {
   const isModalVisible = useSignal(false)
   const languages = useGetLanguages()
   const selectedLanguage = useSignal("")
-  // const userDetails = useContext(userDetailsContext)
   const isError = useSignal(false)
 
   const add = useAddLanguage()
 
-
-
-  console.log(add)
-
-  // TODO: use serverclient instead and make use of a route action
-  // const handleClickAdd = $(async () => {
-  //   const { error } = await supabaseBrowserClient
-  //     .from("user_languages")
-  //     .insert({
-  //       user_id: userDetails.session?.user.id,
-  //       language: selectedLanguage.value,
-  //       country_code_name: selectedLanguage.value,
-  //     })
-  //   if (error) {
-  //     console.error(error)
-  //     isError.value = true
-  //   } else {
-  //     refetchLanguages.submit()
-  //     isModalVisible.value = false
-  //     isError.value = false
-  //   }
-  // })
   if (languages.value.data == null) return null
+
+  const handleSubmit = $(async () => {
+    const { value } = await add.submit({
+      country: selectedLanguage.value,
+      language: languages.value.data?.find(
+        (language) => language.lang_code === selectedLanguage.value,
+      ).lang_name,
+    })
+    if (value.error) {
+      isError.value = true
+    } else {
+      isError.value = false
+      isModalVisible.value = false
+    }
+  })
+
   return (
     <>
       <button
@@ -59,26 +67,32 @@ export default component$<AddLanguageButtonProps>(() => {
         isVisible={isModalVisible}
         onClose={$(() => (isModalVisible.value = false))}
       >
-        <div class="flex gap-4 w-full justify-center items-end mb-16">
-          <Select
-            bind={selectedLanguage}
-            options={languages.value.data
-              .filter((country) => country.lang_code)
-              .sort((a, b) => a.lang_name.localeCompare(b.lang_name))
-              .map((language) => ({
-                key: language.lang_code + language.lang_name,
-                label: `${language.lang_name} (${language.country_name})`,
-                value: language.lang_code as string,
-              }))}
-            label="Select a language"
-            placeholder="Select a language"
-          />
-          {isError.value && (
-            <p class="text-red-500">You've already added that language</p>
-          )}
-          <Button onClick={add.submit}>Add</Button>
-          <button onClick$={add.submit}> </button>
-        </div>
+        <form preventdefault:submit onSubmit$={handleSubmit}>
+          <div class="flex gap-4 w-full justify-center items-end mb-16">
+            <Select
+              bind={selectedLanguage}
+              options={languages.value.data
+                .filter((country) => country.lang_code)
+                .sort((a, b) => a.lang_name.localeCompare(b.lang_name))
+                .map((language) => ({
+                  key: language.lang_code + language.lang_name,
+                  label: `${language.lang_name} (${language.country_name})`,
+                  value: language.lang_code as string,
+                }))}
+              label="Select a language"
+              placeholder="Select a language"
+            />
+            {isError.value && (
+              <p class="text-red-500">You've already added that language</p>
+            )}
+            <select>
+              <option value="active">Active</option>
+              <option value="passive">Passive</option>
+              <option value="study">Study</option>
+            </select>
+            <Button type="submit">Add</Button>
+          </div>
+        </form>
       </Modal>
     </>
   )

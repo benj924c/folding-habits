@@ -14,6 +14,7 @@ import Charts from "./components/Charts"
 import { AddImmersionButton } from "./components/AddImmersionButton/AddImmersionButton"
 import { LanguageSelector } from "./components/LanguageSelector/LanguageSelector"
 import type { IUserLanguages } from "~/models/IUserLanguages"
+import { useAddLanguage } from "./components/AddLanguageButton"
 
 export interface IsupabaseImmersionData {
   data: IImmersionSessions[] | null
@@ -74,6 +75,8 @@ export const useImmersionFormLoader = routeLoader$<
   content_name: "",
   minutes_immersed: 0,
 }))
+
+export { useAddLanguage }
 
 export const immersionDataContext =
   createContextId<IsupabaseImmersionData>("immersionData")
