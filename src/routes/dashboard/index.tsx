@@ -3,6 +3,7 @@ import {
   createContextId,
   useContextProvider,
   useStore,
+  useTask$,
 } from "@builder.io/qwik"
 import { type ImmersionSessionForm } from "./components/AddImmersionButton/components/ImmersionForm"
 import { supabaseServerClient } from "~/utils/supabase"
@@ -105,7 +106,12 @@ export default component$(() => {
   // TODO: Add better zod validation for immersion form ie. it can't be completely empty, it can't be a negative number, number can't be too long
   // TODO: Add day counter
   // TODO: Add challenges tab
-
+  useTask$(({ track }) => {
+    currentLanguage.language = userLanguagesData.value.data?.[0]?.language
+    currentLanguage.country =
+      userLanguagesData.value.data?.[0]?.country_code_name
+    track(() => userLanguagesData.value)
+  })
   return (
     <>
       <div class="">
