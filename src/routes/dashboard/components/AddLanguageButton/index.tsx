@@ -44,7 +44,7 @@ export default component$<AddLanguageButtonProps>(() => {
     const { value } = await add.submit({
       country: selectedLanguage.value,
       language: languages.value.data?.find(
-        (language) => language.lang_code === selectedLanguage.value,
+        (language) => language.country_code_name === selectedLanguage.value,
       ).lang_name,
     })
     if (value.error) {
@@ -77,7 +77,7 @@ export default component$<AddLanguageButtonProps>(() => {
                 .map((language) => ({
                   key: language.lang_code + language.lang_name,
                   label: `${language.lang_name} (${language.country_name})`,
-                  value: language.lang_code as string,
+                  value: language.country_code_name as string,
                 }))}
               label="Select a language"
               placeholder="Select a language"
@@ -85,11 +85,6 @@ export default component$<AddLanguageButtonProps>(() => {
             {isError.value && (
               <p class="text-red-500">You've already added that language</p>
             )}
-            <select>
-              <option value="active">Active</option>
-              <option value="passive">Passive</option>
-              <option value="study">Study</option>
-            </select>
             <Button type="submit">Add</Button>
           </div>
         </form>
