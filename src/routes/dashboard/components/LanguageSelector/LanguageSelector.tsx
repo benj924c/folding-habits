@@ -9,7 +9,6 @@ export interface LanguageSelectorProps {
 
 export const LanguageSelector = component$<LanguageSelectorProps>(
   ({ country }) => {
-    const flag = country ?? "dk"
     // TODO: Map over user's languages and display them
     // TODO: Add a button to add a language (take the one you already made)
     // TODO: Add a button to remove a language (maybe a trash can icon on hover)
@@ -17,7 +16,11 @@ export const LanguageSelector = component$<LanguageSelectorProps>(
       <>
         <div class="dropdown dropdown-right">
           <button class="w-14 h-14">
-            <span class={`fi fi-${flag} fis text-5xl mask mask-circle`} />
+            {country != null ? (
+              <span class={`fi fi-${country} fis text-5xl mask mask-circle`} />
+            ) : (
+              <span class="text-5xl mask mask-circle btn btn-neutral">?</span>
+            )}
           </button>
           <div
             tabIndex={0}
