@@ -1,14 +1,13 @@
 import type { QRL } from "@builder.io/qwik"
-import { $, component$, useContext } from "@builder.io/qwik"
+import { $, component$ } from "@builder.io/qwik"
 import type { SubmitHandler } from "@modular-forms/qwik"
 import { reset, useForm, zodForm$ } from "@modular-forms/qwik"
-import { userDetailsContext } from "~/root"
 import { useImmersionFormLoader } from "../../.."
-import { Input } from "~/components/Input"
-import { z } from "@builder.io/qwik-city"
+import { routeAction$, z, zod$ } from "@builder.io/qwik-city"
+import { supabaseServerClient } from "~/utils/supabase"
 import { Button } from "~/components/Button"
+import { Input } from "~/components/Input"
 import { Select } from "~/components/Select"
-import { supabaseBrowserClient } from "~/utils/supabase"
 
 export const immersionSessionSchema = z.object({
   active_type: z.string().optional().nullable(),
@@ -18,6 +17,34 @@ export const immersionSessionSchema = z.object({
 })
 
 export type ImmersionSessionForm = z.infer<typeof immersionSessionSchema>
+
+export const useAddImmersion = routeAction$(
+  async ({ immersionType, language, values }, requestEv) => {
+    const supabaseClient = await supabaseServerClient(requestEv)
+
+    const { data: userData } = await supabaseClient.auth.getUser()
+    const { error } = await supabaseClient.from("immersion_sessions").insert([
+      {
+        immersion_type: immersionType,
+        active_type: values.active_type,
+        content_type: values.content_type,
+        content_name: values.content_name,
+        seconds_immersed: values.minutes_immersed * 60,
+        user_id: userData.user?.id,
+        language,
+      },
+    ])
+    if (error) {
+      console.error(error)
+      return { error }
+    }
+  },
+  zod$({
+    immersionType: z.enum(["active", "passive", "study"]),
+    language: z.string(),
+    values: immersionSessionSchema,
+  }),
+)
 
 interface ImmersionFormProps {
   immersionType: "active" | "passive" | "study"
@@ -33,27 +60,19 @@ export const ImmersionForm = component$<ImmersionFormProps>(
         validate: zodForm$(immersionSessionSchema),
       })
 
-    const userDetails = useContext(userDetailsContext)
+    const addImmersion = useAddImmersion()
 
     const handleSubmit: QRL<SubmitHandler<ImmersionSessionForm>> = $(
       async (values) => {
-        const { error } = await supabaseBrowserClient
-          .from("immersion_sessions")
-          .insert([
-            {
-              immersion_type: immersionType,
-              active_type: values.active_type,
-              content_type: values.content_type,
-              content_name: values.content_name,
-              seconds_immersed: values.minutes_immersed * 60,
-              user_id: userDetails.session?.user.id,
-              language,
-            },
-          ])
-        if (error) {
-          console.error(error)
+        const { value } = await addImmersion.submit({
+          immersionType,
+          language,
+          values,
+        })
+
+        if (value.error) {
+          console.error(value.error)
         } else {
-          // refetchSupabaseData.submit()
           reset(immersionSessionForm)
           onClose()
         }

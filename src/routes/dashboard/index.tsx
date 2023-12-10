@@ -16,6 +16,7 @@ import { AddImmersionButton } from "./components/AddImmersionButton/AddImmersion
 import { LanguageSelector } from "./components/LanguageSelector/LanguageSelector"
 import type { IUserLanguages } from "~/models/IUserLanguages"
 import { useAddLanguage } from "./components/AddLanguageButton"
+import { useAddImmersion } from "./components/AddImmersionButton/components/ImmersionForm"
 
 export interface IsupabaseImmersionData {
   data: IImmersionSessions[] | null
@@ -78,6 +79,7 @@ export const useImmersionFormLoader = routeLoader$<
 }))
 
 export { useAddLanguage }
+export { useAddImmersion }
 
 export const immersionDataContext =
   createContextId<IsupabaseImmersionData>("immersionData")
