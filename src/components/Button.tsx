@@ -1,5 +1,5 @@
 import type { QRL } from "@builder.io/qwik"
-import { Slot, component$ } from "@builder.io/qwik"
+import { Slot, component$, $ } from "@builder.io/qwik"
 
 interface ButtonProps {
   class?: string
@@ -37,7 +37,7 @@ export const Button = component$<ButtonProps>(
         disabled={isLoading}
         type={type}
         class={`btn ${btnColor} ${className}`}
-        onClick$={onClick}
+        onClick$={$(() => (onClick ? onClick() : null))}
       >
         {isLoading ? (
           <span class="loading loading-spinner text-neutral" />
