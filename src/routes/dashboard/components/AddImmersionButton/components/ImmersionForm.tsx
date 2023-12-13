@@ -18,6 +18,7 @@ export const immersionSessionSchema = z.object({
 
 export type ImmersionSessionForm = z.infer<typeof immersionSessionSchema>
 
+// eslint-disable-next-line
 export const useAddImmersion = routeAction$(
   async ({ immersionType, language, values }, requestEv) => {
     const supabaseClient = await supabaseServerClient(requestEv)
@@ -38,6 +39,7 @@ export const useAddImmersion = routeAction$(
       console.error(error)
       return { error }
     }
+    return { error: null }
   },
   zod$({
     immersionType: z.enum(["active", "passive", "study"]),
@@ -73,6 +75,7 @@ export const ImmersionForm = component$<ImmersionFormProps>(
         if (value.error) {
           console.error(value.error)
         } else {
+          console.log("Immersion added")
           reset(immersionSessionForm)
           onClose()
         }

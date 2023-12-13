@@ -1,34 +1,33 @@
 import {
   component$,
-  useContext,
   useSignal,
   useStore,
   useTask$,
   useVisibleTask$,
 } from "@builder.io/qwik"
 import { Chart } from "chart.js/auto"
-import { immersionDataContext } from "~/routes/dashboard"
+import { useGetImmersionSessions } from "~/routes/dashboard"
 
 export const PieChartImmersionType = component$(() => {
   const canvasRef = useSignal<HTMLCanvasElement>()
-  const immersionData = useContext(immersionDataContext)
+  const immersionSessions = useGetImmersionSessions()
 
   const immersionTotal = useStore({
     activeTotal: 0,
     passiveTotal: 0,
     studyTotal: 0,
   })
-  if (immersionData.data == null) {
+  if (immersionSessions.value.data == null) {
     return <div>Loading</div>
   }
 
   useTask$(({ track }) => {
-    track(() => immersionData.data)
+    track(() => immersionSessions.value)
     immersionTotal.activeTotal = 0
     immersionTotal.passiveTotal = 0
     immersionTotal.studyTotal = 0
 
-    immersionData.data?.forEach((session) => {
+    immersionSessions.value.data?.forEach((session) => {
       if (session.immersion_type === "active") {
         immersionTotal.activeTotal += session.seconds_immersed / 60
       }

@@ -81,9 +81,6 @@ export const useImmersionFormLoader = routeLoader$<
 export { useAddLanguage }
 export { useAddImmersion }
 
-export const immersionDataContext =
-  createContextId<IsupabaseImmersionData>("immersionData")
-
 export const currentLanguageContext = createContextId<{
   language: string | undefined
   country: string | undefined
@@ -94,11 +91,7 @@ export default component$(() => {
   //eslint-disable-next-line
   const languages = useGetLanguages() // TODO: Export this function from the place where it's used and then import it in this file and re export it
   const immersionSessions = useGetImmersionSessions()
-  const supabaseData = useStore<IsupabaseImmersionData>({
-    data: immersionSessions.value.data as IImmersionSessions[],
-    error: immersionSessions.value.error,
-  })
-  useContextProvider(immersionDataContext, supabaseData)
+
   const userLanguagesData = useGetUserLanguages()
   const currentLanguage = useStore({
     language: userLanguagesData.value.data?.[0]?.language,
@@ -145,8 +138,8 @@ export default component$(() => {
               From here you can update your habits and see how far you've come
             </p>
             <Charts />
-            {supabaseData.data &&
-              supabaseData.data.map((item) => {
+            {immersionSessions.value.data &&
+              immersionSessions.value.data.map((item) => {
                 return (
                   <div key={item.id} class="flex gap-4">
                     <p>{item.content_name}</p>

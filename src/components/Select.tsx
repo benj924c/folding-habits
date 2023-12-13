@@ -4,6 +4,7 @@ import {
   type QRL,
   useSignal,
   useTask$,
+  $,
 } from "@builder.io/qwik"
 
 interface SelectProps {
@@ -47,7 +48,7 @@ export const Select = component$<SelectProps>(
         </label>
         <select
           bind:value={binder}
-          onChange$={onChange}
+          onChange$={$(() => (onChange ? onChange() : null))}
           class="select select-primary w-full max-w-xs"
           {...props}
         >
