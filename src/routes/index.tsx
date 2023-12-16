@@ -8,7 +8,7 @@ export default component$(() => {
       <p>
         Welcome to my little side project. I'm building this to assist me in my
         language learning journey. If you're following the refold method,
-        perhaps you might find this useful as well
+        perhaps you might find this useful as well.
       </p>
     </div>
   )
