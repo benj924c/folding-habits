@@ -11,14 +11,7 @@ import { Button } from "~/components/Button"
 import { Input } from "~/components/Input"
 import { supabaseServerClient } from "~/utils/supabase"
 
-export const useRedirectIfLoggedIn = routeLoader$(async (requestEv) => {
-  const { redirect } = requestEv
-  const supabaseClient = await supabaseServerClient(requestEv)
-  const { data } = await supabaseClient.auth.getUser()
-  if (data.user != null) {
-    throw redirect(308, "/dashboard")
-  }
-})
+export { useRedirectIfLoggedIn } from "~/hooks/useRedirectIfLoggedIn"
 
 export const loginFormSchema = z.object({
   email: z.string().email(),
