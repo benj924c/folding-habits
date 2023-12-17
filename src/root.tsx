@@ -1,10 +1,4 @@
-import {
-  component$,
-  createContextId,
-  useContextProvider,
-  useTask$,
-  useStore,
-} from "@builder.io/qwik"
+import { component$, createContextId } from "@builder.io/qwik"
 import {
   QwikCityProvider,
   RouterOutlet,
@@ -14,7 +8,6 @@ import { RouterHead } from "./components/router-head/router-head"
 import type { Session } from "@supabase/supabase-js"
 
 import "./global.css"
-import { supabaseBrowserClient } from "./utils/supabase"
 
 export interface IuserDetails {
   isLoggedIn: boolean
@@ -29,25 +22,6 @@ export default component$(() => {
    *
    * Don't remove the `<head>` and `<body>` elements.
    */
-
-  const userDetails = useStore<IuserDetails>({
-    isLoggedIn: false,
-    session: null,
-  })
-  useContextProvider(userDetailsContext, userDetails)
-  useTask$(async () => {
-    const { data, error } = await supabaseBrowserClient.auth.getSession()
-    if (data.session) {
-      console.log(data.session)
-      userDetails.isLoggedIn = true
-      userDetails.session = data.session
-    }
-    if (error) {
-      console.error(error)
-      userDetails.isLoggedIn = false
-      userDetails.session = null
-    }
-  })
 
   return (
     <QwikCityProvider>

@@ -1,8 +1,8 @@
-import { $, component$, useContext } from "@builder.io/qwik"
+import { $, component$ } from "@builder.io/qwik"
 import { Link, globalAction$ } from "@builder.io/qwik-city"
-import { userDetailsContext } from "~/root"
 import { supabaseServerClient } from "~/utils/supabase"
 import { UserIcon } from "./components/UserIcon"
+import { useUserDetails } from "~/routes/layout"
 
 export const useLogout = globalAction$(async (_, requestEv) => {
   const { redirect } = requestEv
@@ -11,13 +11,11 @@ export const useLogout = globalAction$(async (_, requestEv) => {
 })
 
 export const Header = component$(() => {
-  const userDetails = useContext(userDetailsContext)
   const logout = useLogout()
+  const userDetails = useUserDetails()
 
   const handleLogout = $(async () => {
     await logout.submit()
-    userDetails.isLoggedIn = false
-    userDetails.session = null
   })
 
   return (
@@ -33,12 +31,12 @@ export const Header = component$(() => {
           <Link class="btn btn-ghost normal-case" href="/challenges">
             Challenges
           </Link>
-          {userDetails.isLoggedIn && (
+          {userDetails.value.isLoggedIn && (
             <Link class="btn btn-ghost normal-case" href="/dashboard">
               Dashboard
             </Link>
           )}
-          {userDetails.isLoggedIn ? (
+          {userDetails.value.isLoggedIn ? (
             <UserIcon>
               <Link class="btn btn-ghost normal-case" href="/profile">
                 Profile
