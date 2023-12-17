@@ -2,10 +2,17 @@ import { $, component$, useSignal } from "@builder.io/qwik"
 import { Button } from "~/components/Button"
 import { Modal } from "~/components/Modal"
 import { Select } from "~/components/Select"
-import { useGetLanguages } from "../.."
 // import { userDetailsContext } from "~/root"
-import { routeAction$ } from "@builder.io/qwik-city"
+import { routeAction$, routeLoader$ } from "@builder.io/qwik-city"
 import { supabaseServerClient } from "~/utils/supabase"
+
+export const useGetLanguages = routeLoader$(async (requestEv) => {
+  const supabaseClient = supabaseServerClient(requestEv)
+  const { data, error } = await (await supabaseClient)
+    .from("languages")
+    .select("*")
+  return { data, error }
+})
 
 export const useAddLanguage = routeAction$(async (data, requestEv) => {
   const supabaseClient = await supabaseServerClient(requestEv)

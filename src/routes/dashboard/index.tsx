@@ -18,6 +18,8 @@ import type { IUserLanguages } from "~/models/IUserLanguages"
 import { useAddLanguage } from "./components/AddLanguageButton"
 import { useAddImmersion } from "./components/AddImmersionButton/components/ImmersionForm"
 
+export { useGetLanguages } from "./components/AddLanguageButton"
+
 export interface IsupabaseImmersionData {
   data: IImmersionSessions[] | null
   error: PostgrestError | null
@@ -34,14 +36,6 @@ export const useRedirectIfLoggedIn = routeLoader$(async (requestEv) => {
   if (data.user == null) {
     throw redirect(308, "/login")
   }
-})
-
-export const useGetLanguages = routeLoader$(async (requestEv) => {
-  const supabaseClient = supabaseServerClient(requestEv)
-  const { data, error } = await (await supabaseClient)
-    .from("languages")
-    .select("*")
-  return { data, error }
 })
 
 export const useGetUserLanguages = routeLoader$(async (requestEv) => {
@@ -88,8 +82,6 @@ export const currentLanguageContext = createContextId<{
 
 export default component$(() => {
   // I need to use it here as it's the index file, otherwise I'll get an error when using it in another component
-  //eslint-disable-next-line
-  const languages = useGetLanguages() // TODO: Export this function from the place where it's used and then import it in this file and re export it
   const immersionSessions = useGetImmersionSessions()
 
   const userLanguagesData = useGetUserLanguages()
@@ -100,11 +92,8 @@ export default component$(() => {
 
   useContextProvider(currentLanguageContext, currentLanguage)
 
-  // TODO: Consider using a context for the currentLanguage over prop drilling
   // TODO: Add sub route for language
-  // TODO: Move language into "avatar" circle to more easily switch between languages as well as show which is active
-  // TODO: Filter immersion sessions by language
-  // TODO: Change chart design to be "on brand"
+
   // TODO: Add better zod validation for immersion form ie. it can't be completely empty, it can't be a negative number, number can't be too long
   // TODO: Add day counter
   // TODO: Add challenges tab
