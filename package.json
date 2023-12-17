@@ -1,8 +1,9 @@
 {
-  "name": "my-qwik-empty-starter",
-  "description": "App with Routing built-in ready to create your app",
+  "name": "folding-habits",
+  "description": "A language learning habit tracker",
+  "type": "module",
   "engines": {
-    "node": ">=15.0.0"
+    "node": ">=21.0.0"
   },
   "private": true,
   "scripts": {
@@ -31,12 +32,13 @@
     "@typescript-eslint/eslint-plugin": "6.5.0",
     "@typescript-eslint/parser": "6.5.0",
     "autoprefixer": "^10.4.16",
-    "daisyui": "^3.9.4",
+    "daisyui": "^4.4.20",
     "eslint": "8.48.0",
     "eslint-plugin-qwik": "^1.3.1",
     "postcss": "^8.4.32",
     "prettier": "3.0.3",
-    "tailwindcss": "^3.3.6",
+    "prettier-plugin-tailwindcss": "^0.5.9",
+    "tailwindcss": "3.3.3",
     "typescript": "5.2.2",
     "undici": "5.23.0",
     "vercel": "^29.4.0",
@@ -46,13 +48,11 @@
   "dependencies": {
     "@modular-forms/qwik": "^0.18.1",
     "@qwikest/icons": "^0.0.8",
-    "@supabase/auth-helpers-nextjs": "^0.7.4",
     "@supabase/supabase-js": "^2.39.0",
     "@unpic/qwik": "^0.0.23",
     "chart.js": "^4.4.1",
     "flag-icons": "^7.1.0",
     "install": "^0.13.0",
-    "jsonwebtoken": "^9.0.2",
     "npm": "^9.9.2",
     "supabase-auth-helpers-qwik": "^0.0.3"
   }
