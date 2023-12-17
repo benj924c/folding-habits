@@ -34,11 +34,9 @@ export interface IsupabaseUserLanguagesData {
 }
 
 export const useGetUserLanguages = routeLoader$(async (requestEv) => {
-  const supabaseClient = supabaseServerClient(requestEv)
-  const { data: userDetails } = await (await supabaseClient).auth.getUser()
-  const { data, error } = await (
-    await supabaseClient
-  )
+  const supabaseClient = await supabaseServerClient(requestEv)
+  const { data: userDetails } = await supabaseClient.auth.getUser()
+  const { data, error } = await supabaseClient
     .from("user_languages")
     .select("*")
     .eq("user_id", userDetails.user?.id)
@@ -46,11 +44,9 @@ export const useGetUserLanguages = routeLoader$(async (requestEv) => {
 })
 
 export const useGetImmersionSessions = routeLoader$(async (requestEv) => {
-  const supabaseClient = supabaseServerClient(requestEv)
-  const { data: userDetails } = await (await supabaseClient).auth.getUser()
-  const { data, error } = await (
-    await supabaseClient
-  )
+  const supabaseClient = await supabaseServerClient(requestEv)
+  const { data: userDetails } = await supabaseClient.auth.getUser()
+  const { data, error } = await supabaseClient
     .from("immersion_sessions")
     .select("*")
     .eq("user_id", userDetails.user?.id)
