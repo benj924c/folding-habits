@@ -123,7 +123,7 @@ export default component$(() => {
           </Field>
           <Button
             type="submit"
-            isLoading={signupForm.submitting}
+            isLoading={signupForm.submitting || signUp.isRunning}
             class="btn-wide"
           >
             Sign up
