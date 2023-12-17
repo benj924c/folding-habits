@@ -5,20 +5,24 @@ import {
   useStore,
   useTask$,
 } from "@builder.io/qwik"
-import { type ImmersionSessionForm } from "./components/AddImmersionButton/components/ImmersionForm"
-import { supabaseServerClient } from "~/utils/supabase"
-import { type PostgrestError } from "@supabase/supabase-js"
-import type { IImmersionSessions } from "~/models/IImmersionSessions"
 import { Link, routeLoader$ } from "@builder.io/qwik-city"
-import { type InitialValues } from "@modular-forms/qwik"
+
+import { supabaseServerClient } from "~/utils/supabase"
+
 import Charts from "./components/Charts"
 import { AddImmersionButton } from "./components/AddImmersionButton/AddImmersionButton"
 import { LanguageSelector } from "./components/LanguageSelector/LanguageSelector"
-import type { IUserLanguages } from "~/models/IUserLanguages"
 import { useAddLanguage } from "./components/AddLanguageButton"
 import { useAddImmersion } from "./components/AddImmersionButton/components/ImmersionForm"
 
+import type { PostgrestError } from "@supabase/supabase-js"
+import type { IImmersionSessions } from "~/models/IImmersionSessions"
+import type { InitialValues } from "@modular-forms/qwik"
+import type { IUserLanguages } from "~/models/IUserLanguages"
+import type { ImmersionSessionForm } from "./components/AddImmersionButton/components/ImmersionForm"
+
 export { useGetLanguages } from "./components/AddLanguageButton"
+export { useRedirectIfNotLoggedIn } from "~/hooks/useRedirectIfNotLoggedIn"
 
 export interface IsupabaseImmersionData {
   data: IImmersionSessions[] | null
@@ -28,15 +32,6 @@ export interface IsupabaseUserLanguagesData {
   data: IUserLanguages[] | null
   error: PostgrestError | null
 }
-
-export const useRedirectIfLoggedIn = routeLoader$(async (requestEv) => {
-  const { redirect } = requestEv
-  const supabaseClient = supabaseServerClient(requestEv)
-  const { data } = await (await supabaseClient).auth.getUser()
-  if (data.user == null) {
-    throw redirect(308, "/login")
-  }
-})
 
 export const useGetUserLanguages = routeLoader$(async (requestEv) => {
   const supabaseClient = supabaseServerClient(requestEv)
@@ -81,7 +76,6 @@ export const currentLanguageContext = createContextId<{
 }>("currentLanguage")
 
 export default component$(() => {
-  // I need to use it here as it's the index file, otherwise I'll get an error when using it in another component
   const immersionSessions = useGetImmersionSessions()
 
   const userLanguagesData = useGetUserLanguages()
@@ -93,10 +87,11 @@ export default component$(() => {
   useContextProvider(currentLanguageContext, currentLanguage)
 
   // TODO: Add sub route for language
-
+  // TODO: Move current language to immersion button component
   // TODO: Add better zod validation for immersion form ie. it can't be completely empty, it can't be a negative number, number can't be too long
   // TODO: Add day counter
   // TODO: Add challenges tab
+
   useTask$(({ track }) => {
     currentLanguage.language = userLanguagesData.value.data?.[0]?.language
     currentLanguage.country =
