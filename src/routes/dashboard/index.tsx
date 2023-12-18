@@ -20,6 +20,7 @@ import type { IImmersionSessions } from "~/models/IImmersionSessions"
 import type { InitialValues } from "@modular-forms/qwik"
 import type { IUserLanguages } from "~/models/IUserLanguages"
 import type { ImmersionSessionForm } from "./components/AddImmersionButton/components/ImmersionForm"
+import CurrentTab from "./components/CurrentTab/CurrentTab"
 
 export { useGetLanguages } from "./components/AddLanguageButton"
 export { useRedirectIfNotLoggedIn } from "~/hooks/useRedirectIfNotLoggedIn"
@@ -101,19 +102,16 @@ export default component$(() => {
       </div>
       <div class="grid grid-cols-[10fr_3fr] gap-2">
         <div class="grid">
-          <div class="w-full flex justify-center items-center bg-neutral-focus gap-2 p-2 justify-self-center rounded-t-md">
+          <div class="w-full flex justify-center items-center bg-neutral drop-shadow-md gap-2 p-2 justify-self-center rounded-t-md">
             <LanguageSelector />
+            <Link class="btn btn-ghost btn-md btn-wide normal-case">Stats</Link>
             <Link class="btn btn-ghost btn-md btn-wide normal-case">
               Charts
             </Link>
-            <Link class="btn btn-ghost btn-md btn-wide normal-case">
-              Charts
-            </Link>
-            <Link class="btn btn-ghost btn-md btn-wide normal-case">
-              Charts
-            </Link>
+            <Link class="btn btn-ghost btn-md btn-wide normal-case">Data</Link>
           </div>
           <div class="rounded-b-md bg-neutral p-8 prose-base">
+            <CurrentTab />
             <p>
               From here you can update your habits and see how far you've come
             </p>
