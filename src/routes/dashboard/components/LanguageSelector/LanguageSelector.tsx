@@ -12,13 +12,14 @@ export const LanguageSelector = component$(() => {
       currentLanguage.language = language
     },
   )
+
   // TODO: Map over user's languages and display them
   // TODO: Add a button to add a language (take the one you already made)
   // TODO: Add a button to remove a language (maybe a trash can icon on hover)
   return (
     <>
       <div class="dropdown dropdown-right">
-        <button class="w-14 h-14">
+        <button class="w-14 h-14 hover:scale-105 transition-all btn btn-circle bg-slate-800 border-0">
           {currentLanguage.country != null ? (
             <span
               class={`fi fi-${currentLanguage.country} fis text-5xl mask mask-circle`}
@@ -36,6 +37,7 @@ export const LanguageSelector = component$(() => {
               return null
             return (
               <button
+                class="hover:scale-105 transition-all"
                 key={language.country_code_name}
                 onClick$={() =>
                   handleClick({
