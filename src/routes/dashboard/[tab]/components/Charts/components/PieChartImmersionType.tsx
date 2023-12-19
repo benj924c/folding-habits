@@ -6,7 +6,7 @@ import {
   useVisibleTask$,
 } from "@builder.io/qwik"
 import { Chart } from "chart.js/auto"
-import { useGetImmersionSessions } from "~/routes/dashboard"
+import { useGetImmersionSessions } from "~/routes/dashboard/layout"
 
 export const PieChartImmersionType = component$(() => {
   const canvasRef = useSignal<HTMLCanvasElement>()
