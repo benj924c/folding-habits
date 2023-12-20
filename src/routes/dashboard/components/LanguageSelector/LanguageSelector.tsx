@@ -1,7 +1,7 @@
 import { $, component$, useContext } from "@builder.io/qwik"
 import "@flags"
 import AddLanguageButton from "../AddLanguageButton"
-import { currentLanguageContext, useGetUserLanguages } from "../../layout"
+import { currentLanguageContext, useGetUserLanguages } from "../.."
 
 export const LanguageSelector = component$(() => {
   const currentLanguage = useContext(currentLanguageContext)
