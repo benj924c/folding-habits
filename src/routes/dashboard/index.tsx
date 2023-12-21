@@ -87,7 +87,7 @@ export default component$(() => {
   })
 
   return (
-    <>
+    <div>
       <div class="">
         <h1>Welcome to your habit dashboard {currentLanguage.country}</h1>
       </div>
@@ -144,6 +144,6 @@ export default component$(() => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 })
