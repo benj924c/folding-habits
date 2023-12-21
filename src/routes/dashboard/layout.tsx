@@ -14,5 +14,7 @@ export const useGetImmersionSessions = routeLoader$(async (requestEv) => {
 })
 
 export default component$(() => {
+  const immersion = useGetImmersionSessions()
+  if (immersion.value.data == null) return null
   return <Slot />
 })

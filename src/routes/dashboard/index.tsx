@@ -86,8 +86,6 @@ export default component$(() => {
     track(() => userLanguagesData.value)
   })
 
-  console.log(currentTab.value)
-
   return (
     <>
       <div class="">
