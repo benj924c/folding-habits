@@ -13,8 +13,6 @@ export const LanguageSelector = component$(() => {
     },
   )
 
-  // TODO: Map over user's languages and display them
-  // TODO: Add a button to add a language (take the one you already made)
   // TODO: Add a button to remove a language (maybe a trash can icon on hover)
   return (
     <>

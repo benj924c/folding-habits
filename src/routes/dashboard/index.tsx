@@ -91,6 +91,10 @@ export default component$(() => {
       <div class="">
         <h1>Welcome to your habit dashboard {currentLanguage.country}</h1>
       </div>
+      {/*
+        // TODO: This shouldn't be a grid as it's causing layout shift
+        // TODO: Make mobile friendly
+      */}
       <div class="grid grid-cols-[10fr_3fr] gap-2">
         <div class="grid">
           <div class="w-full flex justify-center items-center bg-neutral drop-shadow-md gap-2 p-2 justify-self-center rounded-t-md">
@@ -122,6 +126,11 @@ export default component$(() => {
           <div class="rounded-t-md bg-neutral-focus prose-h3:m-1 flex align-middle justify-center p-3">
             <h3>Add immersion</h3>
           </div>
+          {/*
+            // TODO: Refactor this into a component
+            // TODO: Place this component absolutely to avoid page shift
+            // TODO: Make buttons circular, no text and with info on hover
+          */}
           <div class="rounded-b-md bg-neutral p-2">
             <AddImmersionButton
               language={currentLanguage.language ?? ""}
