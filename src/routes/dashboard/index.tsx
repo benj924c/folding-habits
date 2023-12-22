@@ -11,19 +11,20 @@ import { routeLoader$ } from "@builder.io/qwik-city"
 
 import { supabaseServerClient } from "~/utils/supabase"
 
-import { AddImmersionButton } from "./components/AddImmersionButton/AddImmersionButton"
 import { LanguageSelector } from "./components/LanguageSelector/LanguageSelector"
 import { useAddLanguage } from "./components/AddLanguageButton"
-import { useAddImmersion } from "./components/AddImmersionButton/components/ImmersionForm"
+import { useAddImmersion } from "./components/AddImmersion/components/AddImmersionButton/components/ImmersionForm"
+
+import { Button } from "~/components/Button"
+import Tabs from "./components/Tabs"
+import AddImmersion from "./components/AddImmersion"
 
 import type { PostgrestError } from "@supabase/supabase-js"
 import type { IImmersionSessions } from "~/models/IImmersionSessions"
 import type { InitialValues } from "@modular-forms/qwik"
 import type { IUserLanguages } from "~/models/IUserLanguages"
-import type { ImmersionSessionForm } from "./components/AddImmersionButton/components/ImmersionForm"
-import { Button } from "~/components/Button"
+import type { ImmersionSessionForm } from "./components/AddImmersion/components/AddImmersionButton/components/ImmersionForm"
 import type { TabType } from "./components/Tabs"
-import Tabs from "./components/Tabs"
 
 export { useGetLanguages } from "./components/AddLanguageButton"
 export { useRedirectIfNotLoggedIn } from "~/hooks/useRedirectIfNotLoggedIn"
@@ -95,7 +96,7 @@ export default component$(() => {
         // TODO: This shouldn't be a grid as it's causing layout shift
         // TODO: Make mobile friendly
       */}
-      <div class="grid grid-cols-[10fr_3fr] gap-2">
+      <div class="flex justify-end">
         <div class="grid">
           <div class="w-full flex justify-center items-center bg-neutral drop-shadow-md gap-2 p-2 justify-self-center rounded-t-md">
             <LanguageSelector />
@@ -122,36 +123,7 @@ export default component$(() => {
             <Tabs tab={currentTab} />
           </div>
         </div>
-        <div>
-          <div class="rounded-t-md bg-neutral-focus prose-h3:m-1 flex align-middle justify-center p-3">
-            <h3>Add immersion</h3>
-          </div>
-          {/*
-            // TODO: Refactor this into a component
-            // TODO: Place this component absolutely to avoid page shift
-            // TODO: Make buttons circular, no text and with info on hover
-          */}
-          <div class="rounded-b-md bg-neutral p-2">
-            <AddImmersionButton
-              language={currentLanguage.language ?? ""}
-              immersionType="active"
-            >
-              👀 Active
-            </AddImmersionButton>
-            <AddImmersionButton
-              language={currentLanguage.language ?? ""}
-              immersionType="passive"
-            >
-              👂🏽 Passive
-            </AddImmersionButton>
-            <AddImmersionButton
-              language={currentLanguage.language ?? ""}
-              immersionType="study"
-            >
-              📚 Study
-            </AddImmersionButton>
-          </div>
-        </div>
+        <AddImmersion />
       </div>
     </div>
   )

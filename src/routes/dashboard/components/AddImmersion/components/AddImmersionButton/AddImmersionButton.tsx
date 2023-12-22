@@ -1,22 +1,27 @@
-import { $, Slot, component$, useSignal } from "@builder.io/qwik"
+import { $, Slot, component$, useContext, useSignal } from "@builder.io/qwik"
+
 import { Modal } from "~/components/Modal"
 import { ImmersionForm } from "./components/ImmersionForm"
 import { Button } from "~/components/Button"
 
+import { currentLanguageContext } from "~/routes/dashboard"
+
 interface AddImmersionSessionProps {
   immersionType: "active" | "passive" | "study"
-  language: string
 }
 
 export const AddImmersionButton = component$<AddImmersionSessionProps>(
-  ({ immersionType, language }) => {
+  ({ immersionType }) => {
     const isFormVisible = useSignal(false)
+    const language = useContext(currentLanguageContext)
+
+    if (language.language == null) return null
 
     return (
       <>
         <Button
           color="neutral"
-          class="w-32 normal-case"
+          class="normal-case btn-circle"
           type="button"
           onClick={$(() => (isFormVisible.value = true))}
         >
@@ -28,7 +33,7 @@ export const AddImmersionButton = component$<AddImmersionSessionProps>(
         >
           <ImmersionForm
             immersionType={immersionType}
-            language={language}
+            language={language.language}
             onClose={$(() => (isFormVisible.value = false))}
           />
         </Modal>
