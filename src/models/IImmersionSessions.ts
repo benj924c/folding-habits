@@ -2,7 +2,7 @@ import type { UUID } from "crypto"
 
 export interface IImmersionSessions {
   id: number
-  immersion_date: Date
+  immersion_date: string
   immersion_type: string
   active_type: string
   content_type: string
