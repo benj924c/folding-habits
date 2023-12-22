@@ -10,9 +10,24 @@ export default component$(() => {
     // TODO: Make buttons circular, no text and with info on hover
   */}
       <div class="pl-2 flex flex-col gap-2">
-        <AddImmersionButton immersionType="active">👀</AddImmersionButton>
-        <AddImmersionButton immersionType="passive">👂🏽</AddImmersionButton>
-        <AddImmersionButton immersionType="study">📚</AddImmersionButton>
+        <AddImmersionButton
+          tooltip="Add an active immersion session"
+          immersionType="active"
+        >
+          👀
+        </AddImmersionButton>
+        <AddImmersionButton
+          tooltip="Add a passive immersion session"
+          immersionType="passive"
+        >
+          👂🏽
+        </AddImmersionButton>
+        <AddImmersionButton
+          tooltip="Add a study immersion session"
+          immersionType="study"
+        >
+          📚
+        </AddImmersionButton>
       </div>
     </div>
   )

@@ -8,10 +8,11 @@ import { currentLanguageContext } from "~/routes/dashboard"
 
 interface AddImmersionSessionProps {
   immersionType: "active" | "passive" | "study"
+  tooltip?: string
 }
 
 export const AddImmersionButton = component$<AddImmersionSessionProps>(
-  ({ immersionType }) => {
+  ({ immersionType, tooltip }) => {
     const isFormVisible = useSignal(false)
     const language = useContext(currentLanguageContext)
 
@@ -19,14 +20,16 @@ export const AddImmersionButton = component$<AddImmersionSessionProps>(
 
     return (
       <>
-        <Button
-          color="neutral"
-          class="normal-case btn-circle"
-          type="button"
-          onClick={$(() => (isFormVisible.value = true))}
-        >
-          <Slot />
-        </Button>
+        <div class="tooltip tooltip-left" data-tip={tooltip}>
+          <Button
+            color="neutral"
+            class="normal-case btn-circle"
+            type="button"
+            onClick={$(() => (isFormVisible.value = true))}
+          >
+            <Slot />
+          </Button>
+        </div>
         <Modal
           onClose={$(() => (isFormVisible.value = false))}
           isVisible={isFormVisible}
