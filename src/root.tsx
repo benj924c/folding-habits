@@ -1,19 +1,12 @@
-import { component$, createContextId } from "@builder.io/qwik"
+import { component$ } from "@builder.io/qwik"
 import {
   QwikCityProvider,
   RouterOutlet,
   ServiceWorkerRegister,
 } from "@builder.io/qwik-city"
 import { RouterHead } from "./components/router-head/router-head"
-import type { Session } from "@supabase/supabase-js"
 
 import "./global.css"
-
-export interface IuserDetails {
-  isLoggedIn: boolean
-  session: Session | null
-}
-export const userDetailsContext = createContextId<IuserDetails>("userDetails")
 
 export default component$(() => {
   /**
