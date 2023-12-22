@@ -3,6 +3,13 @@ import { routeLoader$ } from "@builder.io/qwik-city"
 import { supabaseServerClient } from "~/utils/supabase"
 import type { IsupabaseImmersionData } from "."
 
+import { useGetLanguages } from "./components/AddLanguageButton"
+
+export { useRedirectIfNotLoggedIn } from "~/hooks/useRedirectIfNotLoggedIn"
+export { useGetLanguages }
+export { useAddLanguage } from "./components/AddLanguageButton"
+export { useAddImmersion } from "./components/AddImmersion/components/AddImmersionButton/components/ImmersionForm"
+
 export const useGetImmersionSessions = routeLoader$(async (requestEv) => {
   const supabaseClient = await supabaseServerClient(requestEv)
   const { data: userDetails } = await supabaseClient.auth.getUser()
@@ -15,6 +22,8 @@ export const useGetImmersionSessions = routeLoader$(async (requestEv) => {
 
 export default component$(() => {
   const immersion = useGetImmersionSessions()
+  const languages = useGetLanguages()
   if (immersion.value.data == null) return null
+  if (languages.value.data == null) return null
   return <Slot />
 })

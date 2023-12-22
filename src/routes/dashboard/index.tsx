@@ -12,8 +12,6 @@ import { routeLoader$ } from "@builder.io/qwik-city"
 import { supabaseServerClient } from "~/utils/supabase"
 
 import { LanguageSelector } from "./components/LanguageSelector/LanguageSelector"
-import { useAddLanguage } from "./components/AddLanguageButton"
-import { useAddImmersion } from "./components/AddImmersion/components/AddImmersionButton/components/ImmersionForm"
 
 import { Button } from "~/components/Button"
 import Tabs from "./components/Tabs"
@@ -25,9 +23,6 @@ import type { InitialValues } from "@modular-forms/qwik"
 import type { IUserLanguages } from "~/models/IUserLanguages"
 import type { ImmersionSessionForm } from "./components/AddImmersion/components/AddImmersionButton/components/ImmersionForm"
 import type { TabType } from "./components/Tabs"
-
-export { useGetLanguages } from "./components/AddLanguageButton"
-export { useRedirectIfNotLoggedIn } from "~/hooks/useRedirectIfNotLoggedIn"
 
 export interface IsupabaseImmersionData {
   data: IImmersionSessions[] | null
@@ -57,9 +52,6 @@ export const useImmersionFormLoader = routeLoader$<
   content_name: "",
   minutes_immersed: 0,
 }))
-
-export { useAddLanguage }
-export { useAddImmersion }
 
 export const currentLanguageContext = createContextId<{
   language: string | undefined
@@ -97,7 +89,7 @@ export default component$(() => {
         // TODO: Make mobile friendly
       */}
       <div class="flex justify-end">
-        <div class="grid">
+        <div>
           <div class="w-full flex justify-center items-center bg-neutral drop-shadow-md gap-2 p-2 justify-self-center rounded-t-md">
             <LanguageSelector />
             <Button
@@ -119,11 +111,11 @@ export default component$(() => {
               Data
             </Button>
           </div>
-          <div class="rounded-b-md bg-neutral p-8 prose-base">
+          <div class="rounded-b-md bg-neutral  p-8">
             <Tabs tab={currentTab} />
           </div>
         </div>
-        <AddImmersion />
+        {currentLanguage.language && <AddImmersion />}
       </div>
     </div>
   )
