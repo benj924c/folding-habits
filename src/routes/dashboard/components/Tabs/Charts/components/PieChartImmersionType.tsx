@@ -1,16 +1,19 @@
 import {
   component$,
+  useContext,
   useSignal,
   useStore,
   useTask$,
   useVisibleTask$,
 } from "@builder.io/qwik"
 import { Chart } from "chart.js/auto"
+import { currentLanguageContext } from "~/routes/dashboard"
 import { useGetImmersionSessions } from "~/routes/dashboard/layout"
 
 export const PieChartImmersionType = component$(() => {
   const canvasRef = useSignal<HTMLCanvasElement>()
   const immersionSessions = useGetImmersionSessions()
+  const currentLanguage = useContext(currentLanguageContext)
 
   const immersionTotal = useStore({
     activeTotal: 0,
@@ -23,19 +26,22 @@ export const PieChartImmersionType = component$(() => {
 
   useTask$(({ track }) => {
     track(() => immersionSessions.value)
+    track(() => currentLanguage.language)
     immersionTotal.activeTotal = 0
     immersionTotal.passiveTotal = 0
     immersionTotal.studyTotal = 0
 
     immersionSessions.value.data?.forEach((session) => {
-      if (session.immersion_type === "active") {
-        immersionTotal.activeTotal += session.seconds_immersed / 60
-      }
-      if (session.immersion_type === "passive") {
-        immersionTotal.passiveTotal += session.seconds_immersed / 60
-      }
-      if (session.immersion_type === "study") {
-        immersionTotal.studyTotal += session.seconds_immersed / 60
+      if (session.language === currentLanguage.language) {
+        if (session.immersion_type === "active") {
+          immersionTotal.activeTotal += session.seconds_immersed / 60
+        }
+        if (session.immersion_type === "passive") {
+          immersionTotal.passiveTotal += session.seconds_immersed / 60
+        }
+        if (session.immersion_type === "study") {
+          immersionTotal.studyTotal += session.seconds_immersed / 60
+        }
       }
     })
   })
