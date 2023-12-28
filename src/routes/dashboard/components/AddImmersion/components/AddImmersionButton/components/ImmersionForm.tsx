@@ -1,7 +1,7 @@
 import type { QRL } from "@builder.io/qwik"
 import { $, component$ } from "@builder.io/qwik"
 import type { SubmitHandler } from "@modular-forms/qwik"
-import { reset, useForm, zodForm$ } from "@modular-forms/qwik"
+import { reset, useForm, zodForm$, toCustom$ } from "@modular-forms/qwik"
 import { useImmersionFormLoader } from "~/routes/dashboard"
 import { routeAction$, z, zod$ } from "@builder.io/qwik-city"
 import { supabaseServerClient } from "~/utils/supabase"
@@ -13,7 +13,7 @@ export const immersionSessionSchema = z.object({
   active_type: z.string().optional().nullable(),
   content_type: z.string(),
   content_name: z.string(),
-  minutes_immersed: z.number(),
+  minutes_immersed: z.string(),
 })
 
 export type ImmersionSessionForm = z.infer<typeof immersionSessionSchema>
@@ -30,7 +30,7 @@ export const useAddImmersion = routeAction$(
         active_type: values.active_type,
         content_type: values.content_type,
         content_name: values.content_name,
-        seconds_immersed: values.minutes_immersed * 60,
+        seconds_immersed: Number(values.minutes_immersed) * 60,
         user_id: userData.user?.id,
         language,
       },
@@ -80,6 +80,23 @@ export const ImmersionForm = component$<ImmersionFormProps>(
           onClose()
         }
       },
+    )
+
+    const handleChange = toCustom$<string>(
+      (value = "") => {
+        const newValue = value.replace(/\D/g, "")
+        if (Number(newValue) < 0) {
+          console.log("less than 0")
+          return "0"
+        }
+        if (Number(newValue) > 999) {
+          console.log("more than 999")
+          return "999"
+        }
+        console.log(newValue)
+        return newValue.toString()
+      },
+      { on: "input" },
     )
 
     // TODO: Add error handling in case something goes wrong
@@ -134,13 +151,13 @@ export const ImmersionForm = component$<ImmersionFormProps>(
               </>
             )}
           </Field>
-          <Field name="minutes_immersed" type="number">
+          <Field name="minutes_immersed" transform={handleChange}>
             {(field, props) => (
               <>
                 <Input
                   label="Minutes Immersed"
-                  type="number"
-                  {...{ value: field.value }}
+                  type="text"
+                  inputMode="numeric"
                   {...props}
                 />
                 {field.error && <div>{field.error}</div>}

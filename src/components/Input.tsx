@@ -1,41 +1,11 @@
-import { component$ } from "@builder.io/qwik";
-export interface InputProps {
-  placeholder?: string
-  type?:
-    |"button"
-    |"checkbox"
-    | "color"
-    | "date"
-    | "datetime-local"
-    | "email"
-    | "file"
-    | "hidden"
-    | "image"
-    | "month"
-    | "number"
-    | "password"
-    | "radio"
-    | "range"
-    | "reset"
-    | "search"
-    | "submit"
-    | "tel"
-    | "text"
-    | "time"
-    | "url"
-    | "week"
+import type { InputHTMLAttributes } from "@builder.io/qwik"
+import { component$ } from "@builder.io/qwik"
 
+export type InputProps = {
   label?: string
-  props?: any
-}
+} & InputHTMLAttributes<HTMLInputElement>
 
-export const Input = component$<InputProps>((
-  {
-    type = "text",
-    placeholder = "Type here",
-    label,
-    ...props
-  }) => {
+export const Input = component$<InputProps>(({ label, ...props }) => {
   // TODO: Add CVA for error handling
   return (
     <div class="form-control">
@@ -45,10 +15,8 @@ export const Input = component$<InputProps>((
         </label>
       )}
       <input
-        type={type}
-        placeholder={placeholder}
-        class="input input-bordered input-primary w-full max-w-xs"
         {...props}
+        class="input input-bordered input-primary w-full max-w-xs"
       />
     </div>
   )

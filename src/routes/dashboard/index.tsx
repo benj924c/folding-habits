@@ -50,7 +50,7 @@ export const useImmersionFormLoader = routeLoader$<
   active_type: null,
   content_type: "",
   content_name: "",
-  minutes_immersed: 0,
+  minutes_immersed: "0",
 }))
 
 export const currentLanguageContext = createContextId<{
