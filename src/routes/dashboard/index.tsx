@@ -72,11 +72,10 @@ export default component$(() => {
   // TODO: Add day counter
   // TODO: Add challenges tab
 
-  useTask$(({ track }) => {
+  useTask$(() => {
     currentLanguage.language = userLanguagesData.value.data?.[0]?.language
     currentLanguage.country =
       userLanguagesData.value.data?.[0]?.country_code_name
-    track(() => userLanguagesData.value)
   })
 
   return (
