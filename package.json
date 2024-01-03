@@ -53,6 +53,7 @@
     "@unpic/qwik": "^0.0.38",
     "chart.js": "^4.4.1",
     "flag-icons": "^7.1.0",
+    "imask": "^7.3.0",
     "install": "^0.13.0",
     "npm": "^10.2.5",
     "supabase-auth-helpers-qwik": "^0.0.3"

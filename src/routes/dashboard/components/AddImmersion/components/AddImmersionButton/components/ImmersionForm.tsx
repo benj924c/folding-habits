@@ -1,13 +1,14 @@
 import type { QRL } from "@builder.io/qwik"
 import { $, component$ } from "@builder.io/qwik"
 import type { SubmitHandler } from "@modular-forms/qwik"
-import { reset, useForm, zodForm$, toCustom$ } from "@modular-forms/qwik"
+import { reset, useForm, zodForm$ } from "@modular-forms/qwik"
 import { useImmersionFormLoader } from "~/routes/dashboard"
 import { routeAction$, z, zod$ } from "@builder.io/qwik-city"
 import { supabaseServerClient } from "~/utils/supabase"
 import { Button } from "~/components/Button"
 import { Input } from "~/components/Input"
 import { Select } from "~/components/Select"
+import IMask from "imask"
 
 export const immersionSessionSchema = z.object({
   active_type: z.string().optional().nullable(),
@@ -82,23 +83,6 @@ export const ImmersionForm = component$<ImmersionFormProps>(
       },
     )
 
-    const handleChange = toCustom$<string>(
-      (value = "") => {
-        const newValue = value.replace(/\D/g, "")
-        if (Number(newValue) < 0) {
-          console.log("less than 0")
-          return "0"
-        }
-        if (Number(newValue) > 999) {
-          console.log("more than 999")
-          return "999"
-        }
-        console.log(newValue)
-        return newValue.toString()
-      },
-      { on: "input" },
-    )
-
     // TODO: Add error handling in case something goes wrong
     // TODO: Something is wrong with the value in active_type, it gives error when I try to change it
 
@@ -151,10 +135,20 @@ export const ImmersionForm = component$<ImmersionFormProps>(
               </>
             )}
           </Field>
-          <Field name="minutes_immersed" transform={handleChange}>
+          <Field name="minutes_immersed">
             {(field, props) => (
               <>
                 <Input
+                  onFocus$={(event: FocusEvent) => {
+                    if (event.target instanceof HTMLInputElement === false)
+                      return
+                    IMask(event.target, {
+                      mask: Number,
+                      min: 0,
+                      max: 999,
+                    })
+                  }}
+                  autoComplete="off"
                   label="Minutes Immersed"
                   type="text"
                   inputMode="numeric"
