@@ -1,14 +1,20 @@
 import type { QRL } from "@builder.io/qwik"
-import { $, component$ } from "@builder.io/qwik"
+import {
+  $,
+  NoSerialize,
+  component$,
+  noSerialize,
+  useSignal,
+} from "@builder.io/qwik"
 import type { SubmitHandler } from "@modular-forms/qwik"
-import { reset, useForm, zodForm$ } from "@modular-forms/qwik"
+import { reset, toCustom$, useForm, zodForm$ } from "@modular-forms/qwik"
 import { useImmersionFormLoader } from "~/routes/dashboard"
 import { routeAction$, z, zod$ } from "@builder.io/qwik-city"
 import { supabaseServerClient } from "~/utils/supabase"
 import { Button } from "~/components/Button"
 import { Input } from "~/components/Input"
 import { Select } from "~/components/Select"
-import IMask from "imask"
+import IMask, { type InputMask } from "imask"
 
 export const immersionSessionSchema = z.object({
   active_type: z.string().optional().nullable(),
@@ -36,6 +42,7 @@ export const useAddImmersion = routeAction$(
         language,
       },
     ])
+
     if (error) {
       console.error(error)
       return { error }
@@ -64,6 +71,14 @@ export const ImmersionForm = component$<ImmersionFormProps>(
       })
 
     const addImmersion = useAddImmersion()
+    const mask = useSignal<NoSerialize<
+      InputMask<{
+        mask: NumberConstructor
+        min: number
+        max: number
+        scale: number
+      }>
+    > | null>(null)
 
     const handleSubmit: QRL<SubmitHandler<ImmersionSessionForm>> = $(
       async (values) => {
@@ -78,10 +93,16 @@ export const ImmersionForm = component$<ImmersionFormProps>(
         } else {
           console.log("Immersion added")
           reset(immersionSessionForm)
+          if (mask.value) {
+            mask.value.value = ""
+            mask.value.destroy()
+          }
           onClose()
         }
       },
     )
+
+    console.log(mask.value)
 
     // TODO: Add error handling in case something goes wrong
     // TODO: Something is wrong with the value in active_type, it gives error when I try to change it
@@ -142,11 +163,18 @@ export const ImmersionForm = component$<ImmersionFormProps>(
                   onFocus$={(event: FocusEvent) => {
                     if (event.target instanceof HTMLInputElement === false)
                       return
-                    IMask(event.target, {
-                      mask: Number,
-                      min: 0,
-                      max: 999,
-                    })
+                    if (mask.value) {
+                      mask.value.destroy()
+                      mask.value = null
+                    }
+                    mask.value = noSerialize(
+                      IMask(event.target, {
+                        mask: Number,
+                        min: 1,
+                        max: 999,
+                        scale: 0,
+                      }),
+                    )
                   }}
                   autoComplete="off"
                   label="Minutes Immersed"
