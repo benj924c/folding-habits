@@ -34,7 +34,7 @@ export default component$(() => {
 
   return (
     <div class="prose flex justify-center min-w-fit">
-      <div class="stats shadow">
+      <div class="stats stats-vertical lg:stats-horizontal shadow">
         <Stat
           title="Days of Immersion"
           desc="Number of days"

@@ -30,7 +30,7 @@ export default component$(() => {
   return (
     <div class="flex flex-col min-h-screen">
       <Header />
-      <main class="grid my-16 min-h-[60vh] self-center max-w-6xl prose">
+      <main class="grid my-16 min-h-[60vh] self-center max-w-6xl prose p-4">
         <Slot />
       </main>
       <Footer />

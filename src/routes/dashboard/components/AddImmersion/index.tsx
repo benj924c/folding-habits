@@ -3,13 +3,8 @@ import { AddImmersionButton } from "./components/AddImmersionButton/AddImmersion
 
 export default component$(() => {
   return (
-    <div class="absolute w-0">
-      {/*
-    // TODO: Refactor this into a component
-    // TODO: Place this component absolutely to avoid page shift
-    // TODO: Make buttons circular, no text and with info on hover
-  */}
-      <div class="pl-2 flex flex-col gap-2">
+    <div class="md:absolute">
+      <div class="pl-2 flex sm:flex-col gap-2 justify-end">
         <AddImmersionButton
           tooltip="Add an active immersion session"
           immersionType="active"

@@ -19,7 +19,7 @@ export const Header = component$(() => {
   })
 
   return (
-    <div class="navbar bg-base-100 drop-shadow-md">
+    <div class="invisible sm:visible navbar bg-base-100 drop-shadow-md">
       <header class="flex justify-between container m-auto">
         <Link class="btn btn-ghost normal-case" href="/">
           Logo

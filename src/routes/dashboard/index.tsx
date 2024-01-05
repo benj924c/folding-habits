@@ -87,30 +87,32 @@ export default component$(() => {
         // TODO: This shouldn't be a grid as it's causing layout shift
         // TODO: Make mobile friendly
       */}
-      <div class="flex justify-end">
+      <div class="flex flex-col-reverse gap-2 sm:flex-row md:justify-end">
         <div>
-          <div class="w-full flex justify-center items-center bg-neutral drop-shadow-md gap-2 p-2 justify-self-center rounded-t-md">
+          <div class="flex flex-grow justify-center items-center bg-neutral drop-shadow-md gap-2 p-2 justify-self-center rounded-t-md">
             <LanguageSelector />
-            <Button
-              onClick={$(() => (currentTab.value = "stats"))}
-              class="btn btn-ghost btn-md btn-wide normal-case"
-            >
-              Stats
-            </Button>
-            <Button
-              onClick={$(() => (currentTab.value = "charts"))}
-              class="btn btn-ghost btn-md btn-wide normal-case"
-            >
-              Charts
-            </Button>
-            <Button
-              onClick={$(() => (currentTab.value = "data"))}
-              class="btn btn-ghost btn-md btn-wide normal-case"
-            >
-              Data
-            </Button>
+            <div>
+              <Button
+                onClick={$(() => (currentTab.value = "stats"))}
+                class="btn btn-ghost btn-md md:btn-wide normal-case"
+              >
+                Stats
+              </Button>
+              <Button
+                onClick={$(() => (currentTab.value = "charts"))}
+                class="btn btn-ghost btn-md md:btn-wide normal-case"
+              >
+                Charts
+              </Button>
+              <Button
+                onClick={$(() => (currentTab.value = "data"))}
+                class="btn btn-ghost btn-md md:btn-wide normal-case"
+              >
+                Data
+              </Button>
+            </div>
           </div>
-          <div class="rounded-b-md bg-neutral  p-8">
+          <div class="rounded-b-md bg-neutral w-full p-8">
             <Tabs tab={currentTab} />
           </div>
         </div>
