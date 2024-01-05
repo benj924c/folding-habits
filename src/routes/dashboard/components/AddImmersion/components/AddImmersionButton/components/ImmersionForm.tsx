@@ -1,13 +1,20 @@
 import type { QRL } from "@builder.io/qwik"
 import {
   $,
-  NoSerialize,
+  type NoSerialize,
   component$,
   noSerialize,
   useSignal,
+  useTask$,
 } from "@builder.io/qwik"
 import type { SubmitHandler } from "@modular-forms/qwik"
-import { reset, useForm, zodForm$ } from "@modular-forms/qwik"
+import {
+  focus,
+  reset,
+  useForm,
+  useFormStore,
+  zodForm$,
+} from "@modular-forms/qwik"
 import { useImmersionFormLoader } from "~/routes/dashboard"
 import { routeAction$, z, zod$ } from "@builder.io/qwik-city"
 import { supabaseServerClient } from "~/utils/supabase"
@@ -71,14 +78,8 @@ export const ImmersionForm = component$<ImmersionFormProps>(
       })
 
     const addImmersion = useAddImmersion()
-    const mask = useSignal<NoSerialize<
-      InputMask<{
-        mask: NumberConstructor
-        min: number
-        max: number
-        scale: number
-      }>
-    > | null>(null)
+    const inputRef = useSignal<HTMLInputElement | null>(null)
+    const cleanUpToggle = useSignal(false)
 
     const handleSubmit: QRL<SubmitHandler<ImmersionSessionForm>> = $(
       async (values) => {
@@ -93,17 +94,29 @@ export const ImmersionForm = component$<ImmersionFormProps>(
         } else {
           console.log("Immersion added")
           reset(immersionSessionForm)
-          if (mask.value) {
-            mask.value.value = ""
-            mask.value.destroy()
-          }
+          cleanUpToggle.value = true
           onClose()
         }
       },
     )
 
-    console.log(mask.value)
-
+    useTask$(({ track, cleanup }) => {
+      track(() => inputRef.value)
+      track(() => cleanUpToggle.value)
+      if (inputRef.value == null) return
+      console.log(inputRef.value)
+      const mask = IMask(inputRef.value, {
+        mask: Number,
+        min: 1,
+        max: 999,
+        scale: 0,
+      })
+      if (cleanUpToggle.value) {
+        mask.value = ""
+        cleanUpToggle.value = false
+      }
+      cleanup(() => mask.destroy())
+    })
     // TODO: Add error handling in case something goes wrong
     // TODO: Something is wrong with the value in active_type, it gives error when I try to change it
 
@@ -160,21 +173,8 @@ export const ImmersionForm = component$<ImmersionFormProps>(
             {(field, props) => (
               <>
                 <Input
-                  onFocus$={(event: FocusEvent) => {
-                    if (event.target instanceof HTMLInputElement === false)
-                      return
-                    if (mask.value) {
-                      mask.value.destroy()
-                      mask.value = null
-                    }
-                    mask.value = noSerialize(
-                      IMask(event.target, {
-                        mask: Number,
-                        min: 1,
-                        max: 999,
-                        scale: 0,
-                      }),
-                    )
+                  onFocusIn$={(_: any, element: HTMLInputElement) => {
+                    inputRef.value = element
                   }}
                   autoComplete="off"
                   label="Minutes Immersed"
