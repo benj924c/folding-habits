@@ -1,27 +1,14 @@
 import type { QRL } from "@builder.io/qwik"
-import {
-  $,
-  type NoSerialize,
-  component$,
-  noSerialize,
-  useSignal,
-  useTask$,
-} from "@builder.io/qwik"
+import { $, component$, useSignal, useTask$ } from "@builder.io/qwik"
 import type { SubmitHandler } from "@modular-forms/qwik"
-import {
-  focus,
-  reset,
-  useForm,
-  useFormStore,
-  zodForm$,
-} from "@modular-forms/qwik"
+import { reset, useForm, zodForm$ } from "@modular-forms/qwik"
 import { useImmersionFormLoader } from "~/routes/dashboard"
 import { routeAction$, z, zod$ } from "@builder.io/qwik-city"
 import { supabaseServerClient } from "~/utils/supabase"
 import { Button } from "~/components/Button"
 import { Input } from "~/components/Input"
 import { Select } from "~/components/Select"
-import IMask, { type InputMask } from "imask"
+import IMask from "imask"
 
 export const immersionSessionSchema = z.object({
   active_type: z.string().optional().nullable(),
@@ -104,7 +91,6 @@ export const ImmersionForm = component$<ImmersionFormProps>(
       track(() => inputRef.value)
       track(() => cleanUpToggle.value)
       if (inputRef.value == null) return
-      console.log(inputRef.value)
       const mask = IMask(inputRef.value, {
         mask: Number,
         min: 1,
