@@ -56,6 +56,7 @@
     "imask": "^7.3.0",
     "install": "^0.13.0",
     "npm": "^10.2.5",
+    "og-img": "^0.2.0",
     "supabase-auth-helpers-qwik": "^0.0.3"
   }
 }
