@@ -1,11 +1,11 @@
-import type { JSXNode } from "@builder.io/qwik"
+import type { JSXOutput } from "@builder.io/qwik"
 import { Slot, component$ } from "@builder.io/qwik"
 
 export interface StatProps {
   title?: string
   value?: string
   desc?: string
-  icon?: JSXNode
+  icon?: JSXOutput
 }
 
 export default component$<StatProps>(({ title, value, desc, icon }) => {
