@@ -22,7 +22,7 @@ export const Header = component$(() => {
     <div class="invisible sm:visible navbar bg-base-100 drop-shadow-md">
       <header class="flex justify-between container m-auto">
         <Link class="btn btn-ghost normal-case" href="/">
-          Logo
+          Foldy
         </Link>
         <nav class="flex gap-2">
           <Link class="btn btn-ghost normal-case" href="/">

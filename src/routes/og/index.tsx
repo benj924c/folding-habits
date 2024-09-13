@@ -2,7 +2,7 @@ import type { RequestHandler } from "@builder.io/qwik-city"
 import { fetchFont, ImageResponse, html } from "og-img"
 
 const baseUrl = import.meta.env.PROD
-  ? "https://folding-habits.vercel.app/"
+  ? "https://foldy.app/"
   : "http://127.0.0.1:5173/"
 
 export const onGet: RequestHandler = async ({ send }) => {

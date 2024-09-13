@@ -4,7 +4,7 @@ import type { DocumentHead } from "@builder.io/qwik-city"
 export default component$(() => {
   return (
     <div class="prose">
-      <h1>Folding Habits</h1>
+      <h1>Foldy App</h1>
       <p>
         Welcome to my little side project. I'm building this to assist me in my
         language learning journey. If you're following the refold method,
@@ -15,11 +15,11 @@ export default component$(() => {
 })
 
 export const head: DocumentHead = {
-  title: "Folding habits",
+  title: "Foldy App",
   meta: [
     {
-      name: "Folding Habits",
-      content: "An unofficial refold habit tracker",
+      name: "Foldy App",
+      content: "An unofficial refold companion app",
     },
   ],
 }
