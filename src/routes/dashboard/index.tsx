@@ -81,14 +81,14 @@ export default component$(() => {
   return (
     <div>
       <div class="">
-        <h1>Welcome to your habit dashboard {currentLanguage.country}</h1>
+        <h1>Welcome to your dashboard {currentLanguage.country}</h1>
       </div>
       {/*
         // TODO: This shouldn't be a grid as it's causing layout shift
         // TODO: Make mobile friendly
       */}
       <div class="flex flex-col-reverse gap-2 lg:flex-row md:justify-end">
-        <div>
+        <div class="border-[1px] border-base-content rounded-lg">
           <div class="flex flex-grow justify-center items-center bg-neutral drop-shadow-md gap-2 p-2 justify-self-center rounded-t-md">
             <LanguageSelector />
             <div>

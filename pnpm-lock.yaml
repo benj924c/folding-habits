@@ -20,6 +20,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.45.4
         version: 2.45.4
+      '@tanstack/qwik-table':
+        specifier: ^8.20.5
+        version: 8.20.5(@builder.io/qwik@1.8.0(@types/node@20.14.11))
       '@unpic/qwik':
         specifier: ^0.0.46
         version: 0.0.46(@builder.io/qwik@1.8.0(@types/node@20.14.11))
@@ -648,6 +651,16 @@ packages:
     resolution: {integrity: sha512-AqhlCXl+8grUz8uqExv5OTtgpjuVIwFTSXTrh8y9/pw6q2ek7fJ+Y8ZEVw7EB2DCcuCOtEjf9w3+J3rzts01uA==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20'
+
+  '@tanstack/qwik-table@8.20.5':
+    resolution: {integrity: sha512-2rhYHSNiokaLOIdVZ1m41RXy31mB5uwlWhly7WCK457bUVqPVIDKwcTv8xz7J8JbABzBfS2AIY1d4bcq7OVt1Q==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@builder.io/qwik': '>=1.5'
+
+  '@tanstack/table-core@8.20.5':
+    resolution: {integrity: sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==}
+    engines: {node: '>=12'}
 
   '@tootallnate/once@2.0.0':
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
@@ -3658,6 +3671,13 @@ snapshots:
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.11(ts-node@10.9.1(@types/node@20.14.11)(typescript@5.6.2))
+
+  '@tanstack/qwik-table@8.20.5(@builder.io/qwik@1.8.0(@types/node@20.14.11))':
+    dependencies:
+      '@builder.io/qwik': 1.8.0(@types/node@20.14.11)
+      '@tanstack/table-core': 8.20.5
+
+  '@tanstack/table-core@8.20.5': {}
 
   '@tootallnate/once@2.0.0': {}
 
